@@ -1,5 +1,5 @@
 # Tim T
-# Robot-Sumo 
+# Robot-Sumo
 
 import random
 from Tkinter import *
@@ -33,8 +33,8 @@ def main():
     canvas.data["cols"] = cols
     init(canvas)
 
-    # Run the Program blocking 
-    root.mainloop()  
+    # Run the Program blocking
+    root.mainloop()
 
 # initialize
 def init(canvas):
@@ -67,43 +67,43 @@ def initSumoGrid(canvas):
     cols = canvas.data["cols"]
 
     # Initialize 2D array to 0
-    for row in range(rows): 
+    for row in range(rows):
 	sumoGrid += [[0] * cols]
- 
+
     # Set invalid out-of-bounds areas
     for row in range(rows):
 	for col in range(cols):
-	    if((col <= 5 or col >=24) or 
+	    if((col <= 5 or col >=24) or
 		(row <=5 or row >=24)):
 		sumoGrid[row][col] = -9
-	    elif((col == 6 or col == 23) and 
-		((row >= 6 and row <=10) or 
+	    elif((col == 6 or col == 23) and
+		((row >= 6 and row <=10) or
 		 (row >= 19 and row <=23))):
 		sumoGrid[row][col] = -9
-	    elif((col == 7 or col == 22) and 
-		((row >= 6 and row <=8) or 
+	    elif((col == 7 or col == 22) and
+		((row >= 6 and row <=8) or
 		 (row >= 21 and row <=23))):
 		sumoGrid[row][col] = -9
-	    elif((col == 8 or col == 21) and 
-		((row >= 6 and row <=7) or 
+	    elif((col == 8 or col == 21) and
+		((row >= 6 and row <=7) or
 		 (row >= 22 and row <=23))):
 		sumoGrid[row][col] = -9
-	    elif(((col >= 9 and col <= 10) or 
-		  (col >= 19 and col <= 20)) and 
+	    elif(((col >= 9 and col <= 10) or
+		  (col >= 19 and col <= 20)) and
 		((row == 6) or (row ==23))):
 		sumoGrid[row][col] = -9
 
-    # Initialize Bot #1 position 
+    # Initialize Bot #1 position
     sumoGrid[rows/2][cols/2 - 5] = 1
     canvas.data["bot1Row"] = rows/2
     canvas.data["bot1Col"] = cols/2 - 5
-    # Initialize Bot #2 position 
+    # Initialize Bot #2 position
     sumoGrid[rows/2][cols/2 + 5] = -1
 
     # Store the sumoGrid information
     canvas.data["sumoGrid"] = sumoGrid
 
-# Redraw the grid    
+# Redraw the grid
 def redraw(canvas):
     # Delete the display
     canvas.delete(ALL)
@@ -136,7 +136,7 @@ def drawSumoGrid(canvas):
 #   Draw the Cell, and depending on cell value draw contents
 #	1  = Bot #1
 #	-1 = Bot #2
-#	9  = Out-of-bounds 
+#	9  = Out-of-bounds
 def drawSumoCell(canvas, sumoGrid, row, col):
     #  Get 'global' variables
     cellSize = canvas.data["cellSize"]
@@ -144,7 +144,7 @@ def drawSumoCell(canvas, sumoGrid, row, col):
     right = left + cellSize
     top = row * cellSize
     bottom = top + cellSize
-    
+
     if (sumoGrid[row][col] == 1):
         # Draw the Bot
         canvas.create_rectangle(left, top, right, bottom, fill="blue")
@@ -169,13 +169,13 @@ def moveBot(canvas, drow, dcol):
     sumoGrid = canvas.data["sumoGrid"]
     bot1Row = canvas.data["bot1Row"]
     bot1Col = canvas.data["bot1Col"]
-    
+
     rows = len(sumoGrid)
     cols = len(sumoGrid[0])
-    
+
     newHeadRow = bot1Row + drow
     newHeadCol = bot1Col + dcol
-    prevValue = sumoGrid[newHeadRow][newHeadCol] 
+    prevValue = sumoGrid[newHeadRow][newHeadCol]
 
     # Move to new space
     sumoGrid[newHeadRow][newHeadCol] = 1 + sumoGrid[bot1Row][bot1Col];
@@ -260,5 +260,5 @@ def keyPressed(event):
     redraw(canvas)
 # -------------------- END CALLBACKS --------------------------#
 
-# Run it!
-main()
+if __name__ == "__main__":
+    main()
