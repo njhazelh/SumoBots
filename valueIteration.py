@@ -1,3 +1,5 @@
+import util
+
 def valueIteration(MDP, eps):
 	"""
 	The value iteration algorithm calculates the utility of each state in the MDP. This

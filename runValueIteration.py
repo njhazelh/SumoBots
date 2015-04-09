@@ -1,6 +1,6 @@
 import util
-import MDP
-import valueIteration
+from MDP import MDP
+from valueIteration import valueIteration
 
 # This function creates robot states, actions, a transition model, and
 # a gamma. Then, using these models, it creates 2 robot classes. Then,
