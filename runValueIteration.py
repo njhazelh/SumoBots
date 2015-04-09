@@ -52,7 +52,3 @@ class Robot:
 		self.states = states
 		self.actions = actions
 		self.transModel = transModel
-
-
-
-main()
