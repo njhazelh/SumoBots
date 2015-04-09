@@ -8,10 +8,10 @@ class MDP:
 
 		self.robot1 = robot1
 		self.robot2 = robot2
-		self.states = get_states()
-		self.actions = get_actions()
-		self.transModel = get_transModel()
-		self.rewards = get_rewardModel()
+		self.states = self.get_states()
+		self.actions = self.get_actions()
+		self.transModel = self.get_transModel()
+		self.rewards = self.get_rewardModel()
 		self.gamma = gamma
 
 	def get_states(self):
@@ -44,8 +44,8 @@ class MDP:
 
 		mdpActions = {}
 
-		for mdpState in self.mpdStates:
-			if is_rob1(mdpState):
+		for mdpState in self.states:
+			if self.is_rob1(mdpState):
 				mdpActions[mdpState] = robot1actions[mdpState[1]]
 			else:
 				mdpActions[mdpState] = robot2actions[mdpState[2]]
@@ -67,14 +67,14 @@ class MDP:
 
 		mdp_transModel = {}
 
-		for mdpState in self.mdpStates:
-			if is_rob1(mdpState):
+		for mdpState in self.states:
+			if self.is_rob1(mdpState):
 				actions = robot1actions[mdpState[1]]
 				for action in actions:
 					newStateDist = robot1_transModel[(mdpState[1], action)]
 					currTransModel = {}
-					for newState in newStateDist.keys():
-						currTransModel[(2, newState, mdpState[2])]
+					for (newState, prob) in newStateDist.items():
+						currTransModel[(2, newState, mdpState[2])] = prob
 					mdp_transModel[(mdpState, action)] = currTransModel
 			else:
 				actions = robot2actions[mdpState[2]]
@@ -82,28 +82,22 @@ class MDP:
 					newStateDist = robot2_transModel[(mdpState[2], action)]
 					currTransModel = {}
 					for newState in newStateDist.keys():
-						currTransModel[(1, mdpState[1], newState)]
+						currTransModel[(1, mdpState[1], newState)] = prob
 					mdp_transModel[(mdpState, action)] = currTransModel
 
-			return mdp_transModel
+		return mdp_transModel
 
 	def get_rewardModel(self):
+		""" 
+		We are using a simplified reward system to start with
 		"""
-		The MDP rewards model is a dictionary where a key is a (state, action) tuple,
-		and a value is the reward experienced by the robot (whose turn it is) for 
-		executing the action in the given state
-		"""
-		
-		robot1rewards = self.robot1.rewards
-		robot2rewards = self.robot2.rewards
 
 		mdpRewards = {}
-
-		for mdpState in self.mdpStates:
-			if is_rob1(mdpState):
-				mdpRewards[mdpState] = robot1rewards[mdpState[1]]
+		for mdpState in self.states:
+			if mdpState[1] == (2,1) and mdpState[2] == (1,2):
+				mdpRewards[mdpState] = 10
 			else:
-				mdpRewards[mdpState] = robot2rewards[mdpState[2]]
+				mdpRewards[mdpState] = 1
 
 		return mdpRewards
 
