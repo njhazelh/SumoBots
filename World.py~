@@ -21,12 +21,6 @@ class World:
     """
     pass
 
-  def getBot1(self):
-    return self.bot1
-
-  def getBot2(self):
-    return self.bot2
-
   def setGameOver(self,value):
     self.gameOver = value
     return self.gameOver

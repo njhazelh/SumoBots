@@ -47,18 +47,17 @@ def main():
 def init(canvas):
     # print usage to terminal window
     usage()
-    
+    world = World()
     #initialize global variables.
     canvas.data["isGameOver"] = False
     canvas.data["inDebugMode"] = False
-   
+    canvas.data["world"] = world
+
     rows = canvas.data["rows"]
     cols = canvas.data["cols"]
     bot1 = Bot(cols/2 - 5, rows/2, 1, 1, "blue", canvas)
     bot2 = Bot(cols/2 + 5, rows/2, 1, 1, "green", canvas)
-    world = World(bot1,bot2)
     
-    canvas.data["world"] = world
     canvas.data["bot1"] = bot1
     canvas.data["bot2"] = bot2
     canvas.data["turn"] = 1
