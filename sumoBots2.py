@@ -35,7 +35,6 @@ def main():
     canvas.data["canvasHeight"] = canvasHeight
     canvas.data["rows"] = rows
     canvas.data["cols"] = cols
-    canvas.data["turn"] = 1 # Which robot's turn is it now?
     init(canvas)
     
     # Run the Program blocking
@@ -44,7 +43,6 @@ def main():
 # initialize
 def init(canvas):
     # print usage to terminal window
-    usage()
     
     rows = canvas.data["rows"]
     cols = canvas.data["cols"]
@@ -55,18 +53,10 @@ def init(canvas):
     canvas.data["world"] = world
     canvas.data["bot1"] = bot1
     canvas.data["bot2"] = bot2
-    canvas.data["turn"] = 1
     canvas.data["sumoGrid"] = world.getSumoGrid()
     
     # redraw the canvas
     redraw(canvas)
-
-def usage():
-    print "Robot-Sumo, FIGHT!"
-    print "Use the arrow keys to move the blue SumoBot."
-    print "Stay with the black ring, and push the green SumoBot out."
-    print "Press 'd' for debug mode."
-    print "Press 'r' to restart."
 
 # Redraw the grid
 def redraw(canvas):

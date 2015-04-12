@@ -110,6 +110,11 @@ class World:
                 self.setGameOver(True)
         self.bot1.xPos += dcol
         self.bot1.yPos += drow
+
+	actions = self.bot1.getLegalActions(self)
+	print "Move"
+	print actions
+
         if self.sumoGrid[self.bot1.yPos][self.bot1.xPos] == -9:
             self.setGameOver(True)
 
