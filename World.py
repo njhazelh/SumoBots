@@ -12,6 +12,7 @@ class World:
     self.rows	  = rows
     self.cols     = cols
     self.sumoGrid = []
+    self.states   = []
 
     self.initSumoGrid()
 
@@ -41,6 +42,9 @@ class World:
             elif(((col >= 9 and col <= 10) or (col >= 19 and col <= 20)) and 
 		((row == 6) or (row ==23))):
                 self.sumoGrid[row][col] = -9
+	    else:
+		stateTuple = (row,col)
+		self.states.append(stateTuple)
 
   def getSumoGrid(self):
     return self.sumoGrid
@@ -50,6 +54,9 @@ class World:
     A Unit of time passes
     """
     pass
+
+  def states(self):
+    return self.states
 
   def render(self):
     """

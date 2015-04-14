@@ -52,3 +52,6 @@ class Robot:
 		self.states = states
 		self.actions = actions
 		self.transModel = transModel
+
+
+runValueIteration()
