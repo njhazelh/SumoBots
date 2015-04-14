@@ -2,7 +2,7 @@ from World import World
 
 # Bot
 class Bot:
-    
+
     def __init__(self, xPos, yPos, power, speed, color, canvas, turn):
         self.xPos = xPos # int for row of bot
         self.yPos = yPos # int for col of bot
@@ -14,8 +14,8 @@ class Bot:
 
     def getLegalActions(self, state, world):
         actions = []
-	sumoGrid = world.getSumoGrid()
-        
+        sumoGrid = world.getSumoGrid()
+
         # For now just return 1 space to the 'West', 'East', 'North', 'South'
         if sumoGrid[state[0] + 1][state[1]] != -9:
             actions.append('East')
@@ -28,7 +28,7 @@ class Bot:
 
         if sumoGrid[state[0]][state[1] + 1] != -9:
             actions.append('South')
-        
+
         return actions
 
     def getAllActions(self, world):
@@ -47,12 +47,12 @@ class Bot:
                 transModel[state, actionAttempt] = {}
                 for actionOccur in legalActions:
                     nextState = self.nextState(state, actionOccur)
-                    if actionAttempt == actionOccur: 
+                    if actionAttempt == actionOccur:
                         transModel[(state, actionAttempt)][nextState] = 1 - self.failProb # prob of performing the correct action
                     else:
                         transModel[(state, actionAttempt)][nextState] = pWrongAction
         return transModel
-    
+
     def move (self, action):
         if action == 'West':
             xPos -= 1
@@ -78,7 +78,7 @@ class Bot:
 
     # action can be 'West', 'East', 'North', or 'South'
     def isLegalAction (self, action):
-        
+
         if action == 'West':
             return xPos - 1 >= 0
         elif action == 'East':
