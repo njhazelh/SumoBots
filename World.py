@@ -46,16 +46,6 @@ class World:
 		stateTuple = (row,col)
 		self.states.append(stateTuple)
 
-  def getStates(self):
-    # get a list of all valid states, where a state is a (x,y) position tuple
-
-      states = []
-      for row in range(self.rows):
-          for col in range(self.cols):
-              states.append((row, col))
-
-      return states
-
   def getSumoGrid(self):
     return self.sumoGrid
 
