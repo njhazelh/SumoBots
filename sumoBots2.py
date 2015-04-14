@@ -95,6 +95,8 @@ def redraw(canvas):
         cy = canvas.data["canvasHeight"]/2
         canvas.create_text(cx, cy, text="Game Over!", font=("Helvetica", 32, "bold"))
 
+    canvas.update()
+
 # Draw the Sumo Grid
 #  This just calls drawSumo cell for every "cell"
 def drawSumoGrid(canvas):
@@ -183,6 +185,8 @@ def keyPressed(event):
 
         # redraw the grid
         redraw(canvas)
+
+	time.sleep(1)
 
         if (world.isGameOver() == False) and (compBot.isTurn()):
             world.moveBot('East')

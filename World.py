@@ -89,7 +89,7 @@ class World:
 
   def isDebug(self):
     return self.debug
-
+  
   # Move the Robot-Bot
   #  process moving the bot
   def moveBot(self, action):
@@ -110,11 +110,14 @@ class World:
     if self.bot1.isTurn():
         nextY = self.bot1.yPos + drow
         nextX = self.bot1.xPos + dcol
+
         if nextY == self.bot2.yPos and nextX == self.bot2.xPos:
             self.bot2.xPos += dcol
             self.bot2.yPos += drow
+
             if self.sumoGrid[self.bot2.yPos][self.bot2.xPos] == -9:
                 self.setGameOver(True)
+
         self.bot1.xPos += dcol
         self.bot1.yPos += drow
 
@@ -123,7 +126,7 @@ class World:
 
     elif self.bot2.isTurn():
         nextY = self.bot2.yPos + drow
-        nextX = self.bot1.xPos + dcol
+        nextX = self.bot2.xPos + dcol
         if nextY == self.bot1.yPos and nextX == self.bot1.xPos:
             self.bot1.xPos += dcol
             self.bot1.yPos += drow
