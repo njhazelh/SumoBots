@@ -116,23 +116,23 @@ class World:
 
     return False
 
-def performBestActions(self, U):
-  # (turn, bot1, bot2) are U key values
+  def performBestAction(self, U):
+    # (turn, bot1, bot2) are U key values
   
-  bestMove = None
-  compBotState = self.rob1.state
-  userBotState = self.rob2.state
+    bestMove = None
+    compBotState = (self.bot1.xPos,self.bot1.yPos)
+    userBotState =  (self.bot2.xPos,self.bot2.yPos)
 
-  maxUtil = 0
-  bestAction = None
-  for action in self.rob1.getLegalActions(compRobState, self.world):
-    nextState = rob1.nextState(compRobState, action)
-    currUtil = U[1, compBotState, userBotState]
-    if currUtil > maxUtil:
-      maxUtil = currUtil
-      bestAction = action
+    maxUtil = 0
+    bestAction = None
+    for action in self.bot1.getLegalActions(compBotState, self):
+      nextState = self.bot1.nextState(compBotState, action)
+      currUtil = U[1, compBotState, userBotState]
+      if currUtil > maxUtil:
+        maxUtil = currUtil
+        bestAction = action
 
-  self.moveBot(bestAction)
+    self.moveBot(bestAction)
 
   # Move the Robot-Bot
   #  process moving the bot
