@@ -4,7 +4,7 @@
 import random
 from World import World
 from Bot import Bot
-from sumoArena import SumoArena
+from SumoArena import SumoArena
 from Tkinter import *
 
 # Main function

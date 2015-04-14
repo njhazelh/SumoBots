@@ -2,7 +2,7 @@
 import random
 from World import World
 from Bot import Bot
-from sumoArena import SumoArena
+from SumoArena import SumoArena
 
 rows = cols = 30
 canvas = 1
