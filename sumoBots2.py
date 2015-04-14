@@ -61,6 +61,8 @@ def init(canvas):
     gamma = .3
     eps = .1
     U = runValueIteration(world, compBot, userBot, gamma, eps)
+    Usorted = sorted(U, key=U.get)
+    canvas.data["U"] = U
     
     # redraw the canvas
     redraw(canvas)
@@ -189,7 +191,8 @@ def keyPressed(event):
 	time.sleep(1)
 
         if (world.isGameOver() == False) and (compBot.isTurn()):
-            world.moveBot('East')
+            U = canvas.data["U"]
+            world.performBestAction(U)
   
             # toggle turn 
             compBot.toggleTurn()
