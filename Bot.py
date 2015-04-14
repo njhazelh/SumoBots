@@ -63,6 +63,9 @@ class Bot:
         elif action == 'South':
             yPos -= 1
 
+    def nextState(self):
+        return(self.xPos,self.yPos)
+
     def nextState(self, state, action):
         xPos = state[0]
         yPos = state[1]
