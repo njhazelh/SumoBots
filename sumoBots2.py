@@ -57,10 +57,11 @@ def init(canvas):
     canvas.data["userBot"] = userBot
     canvas.data["sumoGrid"] = world.getSumoGrid()
 
-    # run value iteration for computer bot
+    # run value iteration
     gamma = .3
     eps = .1
     U = runValueIteration(world, compBot, userBot, gamma, eps)
+    canvas.data["U"] = U
     
     # redraw the canvas
     redraw(canvas)
@@ -185,8 +186,10 @@ def keyPressed(event):
         redraw(canvas)
 
         if (world.isGameOver() == False) and (compBot.isTurn()):
-            world.moveBot('East')
-  
+            # dictionary where keys are (turn, compBot, userBot)
+            #U = canvas.data["U"]
+            #world.performBestAction(U)
+            #world.moveBot('East')
             # toggle turn 
             compBot.toggleTurn()
             userBot.toggleTurn()

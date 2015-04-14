@@ -90,6 +90,11 @@ class World:
   def isDebug(self):
     return self.debug
 
+  def performBestAction(self, U):
+    # U is dictionary where keys are (turn, compBot, userBot)
+    if turn == 1:
+      
+
   # Move the Robot-Bot
   #  process moving the bot
   def moveBot(self, action):

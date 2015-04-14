@@ -91,7 +91,7 @@ class MDP:
 		""" 
 		We are using a simplified reward system to start with
 		"""
-
+		sumpGrid = self.world.getSumoGrid()
 		mdpRewards = {}
 		for mdpState in self.states:
 			if mdpState[1] == (2,1) and mdpState[2] == (1,2):
