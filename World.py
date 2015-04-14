@@ -90,6 +90,32 @@ class World:
   def isDebug(self):
     return self.debug
   
+  def pushable(self,action):
+    drow = 0
+    dcol = 0
+    if action == 'North':
+        drow = -1
+    elif action == 'South':
+        drow = 1
+    elif action == 'East':
+        dcol = 1
+    elif action == 'West':
+        dcol = -1  
+
+    if self.bot1.isTurn():
+        nextY = self.bot1.yPos + drow
+        nextX = self.bot1.xPos + dcol
+
+        if nextY == self.bot2.yPos and nextX == self.bot2.xPos:
+            return True
+    else:
+        nextY = self.bot2.yPos + drow
+        nextX = self.bot2.xPos + dcol
+        if nextY == self.bot1.yPos and nextX == self.bot1.xPos:
+            return True
+
+    return False
+
   # Move the Robot-Bot
   #  process moving the bot
   def moveBot(self, action):
