@@ -61,7 +61,6 @@ def init(canvas):
     gamma = .3
     eps = .1
     U = runValueIteration(world, compBot, userBot, gamma, eps)
-    Usorted = sorted(U, key=U.get)
     canvas.data["U"] = U
     
     # redraw the canvas

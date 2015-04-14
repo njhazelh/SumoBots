@@ -1,3 +1,4 @@
+import util
 class MDP:
     """
     This class represents the Markov Decision Process in the sumoBots world.
@@ -69,7 +70,7 @@ class MDP:
 
         for mdpState in self.states:
             if self.is_rob1(mdpState):
-                actions = robot1actions[mdpState[1]]
+                actions = robot1actions[mdpState[1]]    # possible actions robot 1 can take from its current state
                 for action in actions:
                     newStateDist = robot1_transModel[(mdpState[1], action)]
                     currTransModel = {}
@@ -94,12 +95,13 @@ class MDP:
 
         mdpRewards = {}
         for mdpState in self.states:
-            if mdpState[1] == (2, 1) and mdpState[2] == (1, 2):
-                mdpRewards[mdpState] = 10
+            dist = util.manhattanDistance(mdpState[1], mdpState[2])
+            if dist == 0:
+                mdpRewards[mdpState] = 0
             else:
-                mdpRewards[mdpState] = 1
-
+                mdpRewards[mdpState] = 1.0/util.manhattanDistance(mdpState[1], mdpState[2])
         return mdpRewards
 
+    # returns true if it is robot 1's turn
     def is_rob1(self, mdpState):
         return mdpState[0] == 1

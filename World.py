@@ -120,7 +120,6 @@ class World:
     def performBestAction(self, U):
         # (turn, bot1, bot2) are U key values
 
-        bestMove = None
         compBotState = (self.bot1.xPos, self.bot1.yPos)
         userBotState = (self.bot2.xPos, self.bot2.yPos)
 
@@ -128,11 +127,11 @@ class World:
         bestAction = None
         for action in self.bot1.getLegalActions(compBotState, self):
             nextState = self.bot1.nextState(compBotState, action)
-            currUtil = U[1, compBotState, userBotState]
-            if currUtil > maxUtil:
-                maxUtil = currUtil
+            nextUtil = U[1, nextState, userBotState]
+            if nextUtil > maxUtil:
+                maxUtil = nextUtil
                 bestAction = action
-
+        print bestAction
         self.moveBot(bestAction)
 
     # Move the Robot-Bot
