@@ -4,8 +4,8 @@ class MDP:
 	It consists of a set of states, actions, a transition model, rewards, and
 	a discount factor
 	"""
-	def __init__(self, robot1, robot2, gamma):
-
+	def __init__(self, world, robot1, robot2, gamma):
+		self.world = world
 		self.robot1 = robot1
 		self.robot2 = robot2
 		self.states = self.get_states()
@@ -21,8 +21,8 @@ class MDP:
 		beginning of the tuple in the MDP state is which robot's turn it is
 		"""
 
-		robot1states = self.robot1.states
-		robot2states = self.robot2.states
+		robot1states = self.world.getStates()
+		robot2states = self.world.getStates()
 
 		mdpStates = []
 
@@ -39,8 +39,8 @@ class MDP:
 		list of possible actions which can be taken from that state.
 		"""
 
-		robot1actions = self.robot1.actions
-		robot2actions = self.robot2.actions
+		robot1actions = self.robot1.getAllActions(self.world)
+		robot2actions = self.robot2.getAllActions(self.world)
 
 		mdpActions = {}
 
@@ -59,11 +59,11 @@ class MDP:
 		and the value is the probability of a robot transitioning from state to nextState.
 		"""
 
-		robot1actions = self.robot1.actions
-		robot2actions = self.robot2.actions
+		robot1actions = self.robot1.getAllActions(self.world)
+		robot2actions = self.robot2.getAllActions(self.world)
 
-		robot1_transModel = self.robot1.transModel
-		robot2_transModel = self.robot2.transModel
+		robot1_transModel = self.robot1.getTransitionModel(self.world)
+		robot2_transModel = self.robot2.getTransitionModel(self.world)
 
 		mdp_transModel = {}
 

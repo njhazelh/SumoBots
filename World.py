@@ -55,7 +55,7 @@ class World:
     """
     pass
 
-  def states(self):
+  def getStates(self):
     return self.states
 
   def render(self):
@@ -107,7 +107,7 @@ class World:
     rows = len(self.sumoGrid)
     cols = len(self.sumoGrid[0])
     
-    if self.turn == 1:
+    if self.bot1.isTurn():
         nextY = self.bot1.yPos + drow
         nextX = self.bot1.xPos + dcol
         if nextY == self.bot2.yPos and nextX == self.bot2.xPos:
@@ -121,6 +121,17 @@ class World:
         if self.sumoGrid[self.bot1.yPos][self.bot1.xPos] == -9:
             self.setGameOver(True)
 
-    elif self.turn == 2:
-        # Do nothing for now
+    elif self.bot2.isTurn():
+        nextY = self.bot2.yPos + drow
+        nextX = self.bot1.xPos + dcol
+        if nextY == self.bot1.yPos and nextX == self.bot1.xPos:
+            self.bot1.xPos += dcol
+            self.bot1.yPos += drow
+            if self.sumoGrid[self.bot1.yPos][self.bot1.xPos] == -9:
+                self.setGameOver(True)
+        self.bot2.xPos += dcol
+        self.bot2.yPos += drow
+
+        if self.sumoGrid[self.bot2.yPos][self.bot2.xPos] == -9:
+            self.setGameOver(True)
         return
