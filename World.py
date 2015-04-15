@@ -1,3 +1,5 @@
+import util
+
 class World:
     """
     This class represents the world in which the robots are fighting.
@@ -125,12 +127,15 @@ class World:
 
         maxUtil = 0
         bestAction = None
+        
         for action in self.bot1.getLegalActions(compBotState, self):
             nextState = self.bot1.nextState(compBotState, action)
             nextUtil = U[1, nextState, userBotState]
+            print (action, nextUtil)
             if nextUtil > maxUtil:
                 maxUtil = nextUtil
                 bestAction = action
+        
         print bestAction
         self.moveBot(bestAction)
 
@@ -182,3 +187,14 @@ class World:
             if self.sumoGrid[self.bot2.yPos][self.bot2.xPos] == -9:
                 self.setGameOver(True)
             return
+
+def straightLineDist(state1,state2):
+    x1 = state1[0]
+    y1 = state1[1]
+
+    x2 = state2[0]
+    y2 = state2[1]
+
+    dist = pow((pow(abs(x1 - x2),2) + pow(abs(y1 - y2),2)), 0.5)
+
+    return dist
