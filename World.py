@@ -116,6 +116,55 @@ class World:
                 return True
 
         return False
+    
+    def canPushCloserToBoundary(self, action):
+        drow = 0
+        dcol = 0
+        if action == 'North':
+            drow = -1
+        elif action == 'South':
+            drow = 1
+        elif action == 'East':
+            dcol = 1
+        elif action == 'West':
+            dcol = -1
+
+        currentBot2X = self.bot2.xPos
+        currentBot2Y = self.bot2.yPos
+        currentBot1X = self.bot1.xPos
+        currentBot1Y = self.bot1.yPos
+
+        centerX = self.cols/2
+        centerY = self.rows/2
+    
+        if pushable(action):
+            if self.bot1.isTurn():
+                nextBot2X = currentBot2X + dcol
+                nextBot2Y = currentBot2Y + drow
+            
+                if action == 'North':
+                    return nextBot2Y < centerY
+                elif action == 'South':
+                    return nextBot2Y > centerY
+                elif action == 'East':
+                    return nextBot2X < centerX
+                elif action == 'West':
+                    return nextBot2X > centerX
+
+        else:
+            nextBot1X = currentBot1X + dcol
+            nextBot1Y = currentBot1Y + drow
+            
+            if action == 'North':
+                return nextBot1Y < centerY
+            elif action == 'South':
+                return nextBot1Y > centerY
+            elif action == 'East':
+                return nextBot1X < centerX
+            elif action == 'West':
+                return nextBot1X > centerX
+    
+        return False
 
     def performBestAction(self, U):
         # (turn, bot1, bot2) are U key values
