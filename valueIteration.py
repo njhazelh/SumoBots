@@ -25,7 +25,7 @@ def valueIteration(MDP, eps):
 				# will sum the utilities over all possible states from that action
 				sum = 0
 				for (nextState, prob) in MDP.transModel[(mdpState, action)].items():
-					sum += prob*(MDP.rewards[mdpState] + MDP.gamma*U[nextState])
+					sum += prob*(MDP.rewards[nextState] + MDP.gamma*U[nextState])
 				maxVal = max(maxVal, sum)
 			Uprev = U[mdpState]
 		
