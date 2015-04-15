@@ -1,3 +1,5 @@
+
+
 class World:
     """
     This class represents the world in which the robots are fighting.
@@ -14,56 +16,41 @@ class World:
         self.cols = cols
         self.sumoGrid = []
         self.states = []
+        self.ring_radius = 9
 
         self.initSumoGrid()
 
-    # Initialize Sumo Grid
-    # set the initial values for cells 9 = out-of-bounds and
-    #  is what is really being set here
+
     def initSumoGrid(self):
+        """
+        Initialize the cell values of the sumo Grid.
+        Values within bounds are 0.
+        Values out of bounds are -9.
+        """
         # Initialize 2D array to 0
         for row in range(self.rows):
             self.sumoGrid += [[0] * self.cols]
 
-        # Set invalid out-of-bounds areas
+        # Find the center of the grid
+        cx = (self.cols - 1) / 2.0
+        cy = (self.rows - 1) / 2.0
+
+        # Set invalid out-of-bounds areas and record in-bound states
         for row in range(self.rows):
             for col in range(self.cols):
-                if ((col <= 5 or col >= 24) or
-                        (row <= 5 or row >= 24)):
-                    self.sumoGrid[row][col] = -9
-                elif ((col == 6 or col == 23) and
-                          ((row >= 6 and row <= 10) or (row >= 19 and row <= 23))):
-                    self.sumoGrid[row][col] = -9
-                elif ((col == 7 or col == 22) and
-                          ((row >= 6 and row <= 8) or (row >= 21 and row <= 23))):
-                    self.sumoGrid[row][col] = -9
-                elif ((col == 8 or col == 21) and
-                          ((row >= 6 and row <= 7) or (row >= 22 and row <= 23))):
-                    self.sumoGrid[row][col] = -9
-                elif (((col >= 9 and col <= 10) or (col >= 19 and col <= 20)) and
-                          ((row == 6) or (row == 23))):
+                dCenter = ((col - cx) ** 2 + (row - cy) ** 2) ** 0.5
+                if dCenter > self.ring_radius:
                     self.sumoGrid[row][col] = -9
                 else:
                     stateTuple = (row, col)
                     self.states.append(stateTuple)
 
+
     def getSumoGrid(self):
         return self.sumoGrid
 
-    def tick(self):
-        """
-        A Unit of time passes
-        """
-        pass
-
     def getStates(self):
         return self.states
-
-    def render(self):
-        """
-        Returns a rendering of the world that the GUI can show.
-        """
-        pass
 
     def getNumRows(self):
         return self.rows
@@ -116,7 +103,7 @@ class World:
                 return True
 
         return False
-    
+
     def canPushCloserToBoundary(self, action):
         drow = 0
         dcol = 0
@@ -134,14 +121,14 @@ class World:
         currentBot1X = self.bot1.xPos
         currentBot1Y = self.bot1.yPos
 
-        centerX = self.cols/2
-        centerY = self.rows/2
-    
-        if pushable(action):
+        centerX = self.cols / 2
+        centerY = self.rows / 2
+
+        if self.pushable(action):
             if self.bot1.isTurn():
                 nextBot2X = currentBot2X + dcol
                 nextBot2Y = currentBot2Y + drow
-            
+
                 if action == 'North':
                     return nextBot2Y < centerY
                 elif action == 'South':
@@ -154,7 +141,7 @@ class World:
         else:
             nextBot1X = currentBot1X + dcol
             nextBot1Y = currentBot1Y + drow
-            
+
             if action == 'North':
                 return nextBot1Y < centerY
             elif action == 'South':
@@ -163,7 +150,7 @@ class World:
                 return nextBot1X < centerX
             elif action == 'West':
                 return nextBot1X > centerX
-    
+
         return False
 
     def performBestAction(self, U):
