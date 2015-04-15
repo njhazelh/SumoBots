@@ -58,7 +58,7 @@ def init(canvas):
     canvas.data["sumoGrid"] = world.getSumoGrid()
 
     # run value iteration for computer bot
-    gamma = .9
+    gamma = .3
     eps = .1
     U = runValueIteration(world, compBot, userBot, gamma, eps)
     canvas.data["U"] = U
@@ -142,8 +142,6 @@ def drawSumoCell(canvas, sumoGrid, row, col):
         # Draw the actual grid and values
         canvas.create_rectangle(left, top, right, bottom)
         canvas.create_text(left+cellSize/2,top+cellSize/2, text=str(sumoGrid[row][col]),font=("Helvatica", 14, "bold"))
-
-
 
 # -------------------- CALLBACKS ------------------------------#
 # Mouse Callback

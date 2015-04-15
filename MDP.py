@@ -95,24 +95,13 @@ class MDP:
 
         mdpRewards = {}
         for mdpState in self.states:
-            dist = straightLineDist(mdpState[1], mdpState[2])
+            dist = util.manhattanDistance(mdpState[1], mdpState[2])
             if dist == 0:
-                mdpRewards[mdpState] = 15
+                mdpRewards[mdpState] = 0
             else:
-                mdpRewards[mdpState] = 15 - straightLineDist(mdpState[1], mdpState[2])
+                mdpRewards[mdpState] = 1.0/util.manhattanDistance(mdpState[1], mdpState[2])
         return mdpRewards
 
     # returns true if it is robot 1's turn
     def is_rob1(self, mdpState):
         return mdpState[0] == 1
-
-def straightLineDist(state1,state2):
-    x1 = state1[0]
-    y1 = state1[1]
-
-    x2 = state2[0]
-    y2 = state2[1]
-
-    dist = pow((pow(abs(x1 - x2),2) + pow(abs(y1 - y2),2)), 0.5)
-
-    return dist
