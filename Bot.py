@@ -23,7 +23,7 @@ class Bot:
         if sumoGrid[state[0] - 1][state[1]] != -9:
             actions.append('West')
 
-        if sumoGrid[state[0]][state[1]] != -9:
+        if sumoGrid[state[0]][state[1] - 1] != -9:
             actions.append('North')
 
         if sumoGrid[state[0]][state[1] + 1] != -9:
@@ -53,17 +53,7 @@ class Bot:
                         transModel[(state, actionAttempt)][nextState] = pWrongAction
         return transModel
 
-    def move (self, action):
-        if action == 'West':
-            xPos -= 1
-        elif action == 'East':
-            xPos += 1
-        elif action == 'North':
-            yPos += 1
-        elif action == 'South':
-            yPos -= 1
-
-    def nextState(self):
+    def state(self):
         return(self.xPos,self.yPos)
 
     def nextState(self, state, action):
