@@ -10,29 +10,30 @@ def valueIteration(MDP, eps):
 
 	# this will hold all utility information
 	U = util.Counter()
-
+	allActions = MDP.getActions()
 	# when this term become true, the while loop terminates
 	keep_iterating = True
 	while keep_iterating: 
-
+		maxDeltU = 0
 		# loop through each state on each iteration
 		for mdpState in MDP.states:
-
 			# will store the maximum utility out of all possible actions
 			maxVal = 0
-			for action in MDP.actions[mdpState]:
 
+			for action in allActions[mdpState]:
 				# will sum the utilities over all possible states from that action
-				sum = 0
+				total = 0
 				for (nextState, prob) in MDP.transModel[(mdpState, action)].items():
-					sum += prob*(MDP.rewards[nextState] + MDP.gamma*U[nextState])
-				maxVal = max(maxVal, sum)
+					total += prob*(MDP.rewards[nextState] + MDP.gamma*U[nextState])
+				maxVal = max(maxVal, total)
 			Uprev = U[mdpState]
 		
 			# update the utility for this state
 			U[mdpState] = maxVal
 
 			# if the utility value changes by less than eps, then stop iterating
-			if abs(Uprev - U[mdpState]) < eps:
-				keep_iterating = False
+			deltU = abs(Uprev - U[mdpState])
+			maxDeltU = max(maxDeltU, deltU)
+		if maxDeltU < eps:
+			keep_iterating = False
 	return U
