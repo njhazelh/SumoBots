@@ -180,7 +180,6 @@ class World:
             if nextUtil > maxUtil:
                 maxUtil = nextUtil
                 bestAction = action
-        print bestAction
         self.moveBot(bestAction)
 
     # Move the Robot-Bot
