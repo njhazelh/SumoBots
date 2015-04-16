@@ -1,6 +1,6 @@
 from World import World
 from Bot import Bot
-from SumoArena import SumoArena
+from trash import SumoArena
 
 rows = cols = 30
 canvas = 1
