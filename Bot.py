@@ -23,10 +23,10 @@ class Bot:
         if sumoGrid[state[0] - 1][state[1]] != -9:
             actions.append('West')
 
-        if sumoGrid[state[0]][state[1] + 1] != -9:
+        if sumoGrid[state[0]][state[1] - 1] != -9:
             actions.append('North')
 
-        if sumoGrid[state[0]][state[1] - 1] != -9:
+        if sumoGrid[state[0]][state[1] + 1] != -9:
             actions.append('South')
 
         return actions
@@ -65,9 +65,9 @@ class Bot:
         elif action == 'East':
             xPos = state[0] + 1
         elif action == 'North':
-            yPos = state[1] + 1
-        elif action == 'South':
             yPos = state[1] - 1
+        elif action == 'South':
+            yPos = state[1] + 1
 
         return (xPos, yPos)
 
@@ -79,9 +79,9 @@ class Bot:
         elif action == 'East':
             return xPos + 1 <= cols
         elif action == 'North':
-            return yPos + 1 <= rows
+            return yPos - 1 <= rows
         elif action == 'South':
-            return yPos - 1 >= 0
+            return yPos + 1 >= 0
 
     def isAt (self, xPos, yPos):
         return self.xPos == xPos and self.yPos == yPos
