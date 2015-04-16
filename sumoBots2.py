@@ -18,8 +18,8 @@ def main():
     root.bind("<Key>", keyPressed)
     root.resizable(width=0, height=0)
 
-    cellSize = 20
-    rows = cols = 30
+    cellSize = 40
+    rows = cols = 15
     canvasWidth = cols * cellSize
     canvasHeight = rows * cellSize
     canvas = Canvas(root, width=canvasWidth, height=canvasHeight)
@@ -101,8 +101,8 @@ def init(canvas):
 
     rows = canvas.data["rows"]
     cols = canvas.data["cols"]
-    compBot = Bot(cols / 2 - 5, rows / 2, 1, 1, "blue", canvas, False)
-    userBot = Bot(cols / 2 + 5, rows / 2, 1, 1, "green", canvas, True)
+    compBot = Bot(cols / 2 - 3, rows / 2, 1, 1, "blue", canvas, False)
+    userBot = Bot(cols / 2 + 3, rows / 2, 1, 1, "green", canvas, True)
     world = World(rows, cols, compBot, userBot)
 
     canvas.data["world"] = world
@@ -143,6 +143,9 @@ def redraw(canvas):
 
     # draw the sumo grid
     drawSumoGrid(canvas)
+
+    # create the sumo ring
+    canvas.create_oval(120, 120, 480, 480, width=5)
 
     # display whose turn it is
     cx = canvas.data["canvasWidth"] - 100

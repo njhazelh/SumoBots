@@ -16,7 +16,7 @@ class World:
         self.cols = cols
         self.sumoGrid = []
         self.states = []
-        self.ring_radius = 9
+        self.ring_radius = 4
         self.gamma = 0.3
         self.eps = 0.1
         self.alpha = 0.5
@@ -31,7 +31,7 @@ class World:
         Values out of bounds are -9.
         """
         # Initialize 2D array to 0
-        for row in xrange(self.rows):
+        for row in range(self.rows):
             self.sumoGrid += [[0] * self.cols]
 
         # Find the center of the grid
@@ -39,10 +39,11 @@ class World:
         cy = (self.rows - 1) / 2.0
 
         # Set invalid out-of-bounds areas and record in-bound states
-        for row in xrange(self.rows):
-            for col in xrange(self.cols):
+        for row in range(self.rows):
+            for col in range(self.cols):
                 dCenter = ((col - cx) ** 2 + (row - cy) ** 2) ** 0.5
-                if dCenter > self.ring_radius:
+		
+                if round(dCenter) > self.ring_radius:
                     self.sumoGrid[row][col] = -9
                 else:
                     stateTuple = (row, col)
