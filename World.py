@@ -28,7 +28,7 @@ class World:
         Values out of bounds are -9.
         """
         # Initialize 2D array to 0
-        for row in range(self.rows):
+        for row in xrange(self.rows):
             self.sumoGrid += [[0] * self.cols]
 
         # Find the center of the grid
@@ -36,8 +36,8 @@ class World:
         cy = (self.rows - 1) / 2.0
 
         # Set invalid out-of-bounds areas and record in-bound states
-        for row in range(self.rows):
-            for col in range(self.cols):
+        for row in xrange(self.rows):
+            for col in xrange(self.cols):
                 dCenter = ((col - cx) ** 2 + (row - cy) ** 2) ** 0.5
                 if dCenter > self.ring_radius:
                     self.sumoGrid[row][col] = -9
@@ -105,6 +105,11 @@ class World:
         return False
 
     def canPushCloserToBoundary(self, action):
+        """
+        Can this bot be pushed closer to the boundary?
+        :param action:
+        :return:
+        """
         drow = 0
         dcol = 0
         if action == 'North':
@@ -121,14 +126,13 @@ class World:
         currentBot1X = self.bot1.xPos
         currentBot1Y = self.bot1.yPos
 
-        centerX = self.cols / 2
-        centerY = self.rows / 2
+        centerX = (self.cols - 1) / 2.0
+        centerY = (self.rows - 1) / 2.0
 
         if self.pushable(action):
             if self.bot1.isTurn():
                 nextBot2X = currentBot2X + dcol
                 nextBot2Y = currentBot2Y + drow
-
                 if action == 'North':
                     return nextBot2Y < centerY
                 elif action == 'South':
@@ -137,7 +141,6 @@ class World:
                     return nextBot2X < centerX
                 elif action == 'West':
                     return nextBot2X > centerX
-
         else:
             nextBot1X = currentBot1X + dcol
             nextBot1Y = currentBot1Y + drow
@@ -150,12 +153,13 @@ class World:
                 return nextBot1X < centerX
             elif action == 'West':
                 return nextBot1X > centerX
-
         return False
 
     def performBestAction(self, U):
-        # (turn, bot1, bot2) are U key values
-
+        """
+        Choose and perform the best action.
+        :param U: (turn, bot1, bot2) are U key values
+        """
         compBotState = (self.bot1.xPos, self.bot1.yPos)
         userBotState = (self.bot2.xPos, self.bot2.yPos)
 
@@ -169,9 +173,12 @@ class World:
                 bestAction = action
         self.moveBot(bestAction)
 
-    # Move the Robot-Bot
-    #  process moving the bot
     def moveBot(self, action):
+        """
+        Move the Robot Bot
+        Process moving the bot.
+        :param action: The action the bot should perform.
+        """
         drow = 0
         dcol = 0
         if action == 'North':
@@ -182,9 +189,6 @@ class World:
             dcol = 1
         elif action == 'West':
             dcol = -1
-
-        rows = len(self.sumoGrid)
-        cols = len(self.sumoGrid[0])
 
         if self.bot1.isTurn():
             nextY = self.bot1.yPos + drow
