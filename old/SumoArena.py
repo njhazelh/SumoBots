@@ -20,7 +20,8 @@ class SumoArena:
         canvasWidth = cols * self.cellSize
         canvasHeight = rows * self.cellSize
 
-        self.sumoArena.canvas = Canvas(self.sumoArena, width=canvasWidth, height=canvasHeight)
+        self.sumoArena.canvas = Canvas(self.sumoArena, width=canvasWidth,
+                                       height=canvasHeight)
         self.sumoArena.canvas.pack()
 
         # redraw the canvas

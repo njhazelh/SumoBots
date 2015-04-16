@@ -21,7 +21,7 @@ def main():
     root.bind("<Button-1>", mousePressed)
     root.bind("<Key>", keyPressed)
     root.resizable(width=0, height=0)
-    
+
     cellSize = 20
     rows = cols = 30
     canvasWidth = cols*cellSize
@@ -29,7 +29,7 @@ def main():
     canvas = Canvas(root, width=canvasWidth, height=canvasHeight)
     # Store canvas in root and in canvas itself for callbacks
     root.canvas = canvas.canvas = canvas
-    
+
     # Set up canvas data and call init
     canvas.pack()
     canvas.data = { }
@@ -37,7 +37,7 @@ def main():
     canvas.data["canvasWidth"] = canvasWidth
     canvas.data["canvasHeight"] = canvasHeight
     canvas.data["rows"] = rows
-    canvas.data["cols"] = cols 
+    canvas.data["cols"] = cols
     canvas.data["reset"] = False
 
     init(canvas)
@@ -48,7 +48,7 @@ def main():
     canvas.update()
 
     world = canvas.data["world"]
-    compBot = canvas.data["compBot"] 
+    compBot = canvas.data["compBot"]
     userBot = canvas.data["userBot"]
 
     # run value iteration for computer bot
@@ -99,23 +99,23 @@ def init(canvas):
     :return:
     """
     # print usage to terminal window
-    
+
     rows = canvas.data["rows"]
     cols = canvas.data["cols"]
     compBot = Bot(cols/2 - 5, rows/2, 1, 1, "blue", canvas, False)
     userBot = Bot(cols/2 + 5, rows/2, 1, 1, "green", canvas, True)
-    world = World(rows,cols,compBot,userBot)
-    
+    world = World(rows, cols, compBot, userBot)
+
     canvas.data["world"] = world
     canvas.data["compBot"] = compBot
     canvas.data["userBot"] = userBot
     canvas.data["sumoGrid"] = world.getSumoGrid()
-    
+
     # redraw the canvas
     redraw(canvas)
 
     if canvas.data["reset"] == True:
-	countDown(canvas)
+        countDown(canvas)
 
 # Redraw the grid
 def redraw(canvas):
@@ -132,13 +132,13 @@ def redraw(canvas):
     drawSumoGrid(canvas)
     # create the sumo ring
     canvas.create_oval(120, 120, 480, 480,width=5)
-    
+
     # display whose turn it is
     cx = canvas.data["canvasWidth"] - 100
     cy = canvas.data["canvasHeight"] - 10
 
     if (compBot.isTurn()):
-	canvas.create_text(cx-50, cy, text="Turn: ", fill="black",font=("Helvetica", 18, "bold"))
+        canvas.create_text(cx-50, cy, text="Turn: ", fill="black",font=("Helvetica", 18, "bold"))
         canvas.create_text(cx+40, cy, text="Computer", fill="blue",font=("Helvetica", 18, "bold"))
     else:
         canvas.create_text(cx-50, cy, text="Turn: ", fill="black",font=("Helvetica", 18, "bold"))
@@ -159,7 +159,7 @@ def drawSumoGrid(canvas):
     sumoGrid = canvas.data["sumoGrid"]
     rows = len(sumoGrid)
     cols = len(sumoGrid[0])
-    
+
     # Draw the individual row/col cell
     for row in range(rows):
         for col in range(cols):
@@ -175,7 +175,7 @@ def drawSumoCell(canvas, sumoGrid, row, col):
     right = left + cellSize
     top = row * cellSize
     bottom = top + cellSize
-    
+
     compBot = canvas.data["compBot"]
     userBot = canvas.data["userBot"]
     world = canvas.data["world"]
@@ -192,7 +192,7 @@ def drawSumoCell(canvas, sumoGrid, row, col):
         if (sumoGrid[row][col] == -9):
             # draw out-of-bounds
             canvas.create_rectangle(left, top, right, bottom, fill="red")
-        
+
         # Draw the actual grid and values
         canvas.create_rectangle(left, top, right, bottom)
         canvas.create_text(left+cellSize/2,top+cellSize/2, text=str(sumoGrid[row][col]),font=("Helvatica", 14, "bold"))
@@ -219,7 +219,7 @@ def keyPressed(event):
     if (event.char == "q"):
         world.setGameOver(True)
     elif (event.char == "r"):
-	canvas.data["reset"] = True
+        canvas.data["reset"] = True
         init(canvas)
     elif (event.char == "d"):
         world.toggleDebug()
@@ -235,20 +235,20 @@ def keyPressed(event):
         elif (event.keysym == "Right"):
             world.moveBot('East')
 
-        # toggle turn 
+        # toggle turn
         compBot.toggleTurn()
         userBot.toggleTurn()
 
         # redraw the grid
         redraw(canvas)
 
-	time.sleep(1)
+        time.sleep(1)
 
         if (world.isGameOver() == False) and (compBot.isTurn()):
             U = canvas.data["U"]
             world.performBestAction(U)
-  
-            # toggle turn 
+
+            # toggle turn
             compBot.toggleTurn()
             userBot.toggleTurn()
 
@@ -257,7 +257,7 @@ def keyPressed(event):
 
         # need to change this to a robot.getBestAction method
         #world.moveBot('East')
-        
+
 
 
 
