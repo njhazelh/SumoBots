@@ -18,7 +18,7 @@ def main():
     root = Tk()
     root.title("Robot-Sumo [by Team Wall-E]")
     # set up events
-    root.bind("<Button-1>", mousePressed)
+    #root.bind("<Button-1>", mousePressed)
     root.bind("<Key>", keyPressed)
     root.resizable(width=0, height=0)
     
@@ -42,9 +42,7 @@ def main():
 
     init(canvas)
 
-    cx = canvasWidth/2
-    cy = canvasHeight/2
-    canvas.create_text(cx, cy-50, text="Loading...", tag="load",fill="red",font=("Helvetica", 32, "bold"))
+    canvas.create_text(canvasWidth/2, (canvasHeight/2)-50, text="Loading...", tag="load",fill="red",font=("Helvetica", 32, "bold"))
     canvas.update()
 
     world = canvas.data["world"]
@@ -115,14 +113,19 @@ def init(canvas):
     redraw(canvas)
 
     if canvas.data["reset"] == True:
+	canvas.data["reset"] = False
 	countDown(canvas)
 
 # Redraw the grid
 def redraw(canvas):
 
     # Delete the display
-    canvas.delete(ALL)
 
+    canvas.delete(ALL) 
+
+    # Add Title
+    canvas.create_text(canvas.data["canvasWidth"]/2, canvas.data["canvasHeight"]/8, text="SumoBot Arena", tag="title",fill="black",font=("Helvetica", 18, "bold"))
+ 
     # unpack world and bot objs
     world = canvas.data["world"]
     compBot = canvas.data["compBot"]
@@ -138,11 +141,11 @@ def redraw(canvas):
     cy = canvas.data["canvasHeight"] - 10
 
     if (compBot.isTurn()):
-	canvas.create_text(cx-50, cy, text="Turn: ", fill="black",font=("Helvetica", 18, "bold"))
-        canvas.create_text(cx+40, cy, text="Computer", fill="blue",font=("Helvetica", 18, "bold"))
+	canvas.create_text(50, cy-20, text="Turn: ", fill="black",font=("Helvetica", 18, "bold"))
+        canvas.create_text(140, cy-20, text="Computer", fill="blue",font=("Helvetica", 18, "bold"))
     else:
-        canvas.create_text(cx-50, cy, text="Turn: ", fill="black",font=("Helvetica", 18, "bold"))
-        canvas.create_text(cx+10, cy, text="User", fill="green",font=("Helvetica", 18, "bold"))
+        canvas.create_text(50, cy-20, text="Turn: ", fill="black",font=("Helvetica", 18, "bold"))
+        canvas.create_text(110, cy-20, text="User", fill="green",font=("Helvetica", 18, "bold"))
 
     # If Game Over write text
     if (world.isGameOver()):
