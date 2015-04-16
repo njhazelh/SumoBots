@@ -1,5 +1,4 @@
-# Tim T
-# Robot-Sumo
+#!/usr/bin/python
 
 import random
 import time
@@ -12,7 +11,9 @@ from runValueIteration import runValueIteration
 # Main function
 #  where it all begins
 def main():
-    
+    """
+    Main Function
+    """
     # Create the main
     root = Tk()
     root.title("Robot-Sumo [by Team Wall-E]")
@@ -36,14 +37,67 @@ def main():
     canvas.data["canvasWidth"] = canvasWidth
     canvas.data["canvasHeight"] = canvasHeight
     canvas.data["rows"] = rows
-    canvas.data["cols"] = cols
+    canvas.data["cols"] = cols 
+    canvas.data["reset"] = False
+
     init(canvas)
+
+    cx = canvasWidth/2
+    cy = canvasHeight/2
+    canvas.create_text(cx, cy-50, text="Loading...", tag="load",fill="red",font=("Helvetica", 32, "bold"))
+    canvas.update()
+
+    world = canvas.data["world"]
+    compBot = canvas.data["compBot"] 
+    userBot = canvas.data["userBot"]
+
+    # run value iteration for computer bot
+    gamma = .3
+    eps = .1
+    U = runValueIteration(world, compBot, userBot, gamma, eps)
+    canvas.data["U"] = U
+
+    canvas.delete("load")
+    canvas.update()
+
+    countDown(canvas)
 
     # Run the Program blocking
     root.mainloop()
 
+def countDown(canvas):
+    # display whose turn it is
+    cx = canvas.data["canvasWidth"]/2
+    cy = canvas.data["canvasHeight"]/2
+
+    canvas.create_text(cx, cy-50, text="3", tag="three",fill="red",font=("Helvetica", 32, "bold"))
+    canvas.update()
+    time.sleep(1)
+    canvas.delete("three")
+    canvas.update()
+    canvas.create_text(cx, cy-50, text="2", tag="two",fill="red",font=("Helvetica", 32, "bold"))
+    canvas.update()
+    time.sleep(1)
+    canvas.delete("two")
+    canvas.update()
+    canvas.create_text(cx, cy-50, text="1", tag="one",fill="red",font=("Helvetica", 32, "bold"))
+    canvas.update()
+    time.sleep(1)
+    canvas.delete("one")
+    canvas.update()
+    canvas.create_text(cx, cy-50, text="Fight!", tag="Fight",fill="red",font=("Helvetica", 32, "bold"))
+    canvas.update()
+    time.sleep(1)
+    canvas.delete("Fight")
+    canvas.update()
+
 # initialize
 def init(canvas):
+    """
+    Initialize
+    :param canvas:
+    :return:
+    """
     # print usage to terminal window
     
     rows = canvas.data["rows"]
@@ -56,18 +110,16 @@ def init(canvas):
     canvas.data["compBot"] = compBot
     canvas.data["userBot"] = userBot
     canvas.data["sumoGrid"] = world.getSumoGrid()
-
-    # run value iteration for computer bot
-    gamma = .3
-    eps = .1
-    U = runValueIteration(world, compBot, userBot, gamma, eps)
-    canvas.data["U"] = U
     
     # redraw the canvas
     redraw(canvas)
 
+    if canvas.data["reset"] == True:
+	countDown(canvas)
+
 # Redraw the grid
 def redraw(canvas):
+
     # Delete the display
     canvas.delete(ALL)
 
@@ -86,9 +138,11 @@ def redraw(canvas):
     cy = canvas.data["canvasHeight"] - 10
 
     if (compBot.isTurn()):
-        canvas.create_text(cx, cy, text="Turn: Computer", font=("Helvetica", 18, "bold"))
+	canvas.create_text(cx-50, cy, text="Turn: ", fill="black",font=("Helvetica", 18, "bold"))
+        canvas.create_text(cx+40, cy, text="Computer", fill="blue",font=("Helvetica", 18, "bold"))
     else:
-        canvas.create_text(cx, cy, text="Turn: User", font=("Helvetica", 18, "bold"))
+        canvas.create_text(cx-50, cy, text="Turn: ", fill="black",font=("Helvetica", 18, "bold"))
+        canvas.create_text(cx+10, cy, text="User", fill="green",font=("Helvetica", 18, "bold"))
 
     # If Game Over write text
     if (world.isGameOver()):
@@ -165,6 +219,7 @@ def keyPressed(event):
     if (event.char == "q"):
         world.setGameOver(True)
     elif (event.char == "r"):
+	canvas.data["reset"] = True
         init(canvas)
     elif (event.char == "d"):
         world.toggleDebug()
