@@ -17,6 +17,9 @@ class World:
         self.sumoGrid = []
         self.states = []
         self.ring_radius = 9
+        self.gamma = 0.3
+        self.eps = 0.1
+        self.alpha = 0.5
 
         self.initSumoGrid()
 
