@@ -6,7 +6,7 @@ from Tkinter import *
 from World import World
 from Bot import Bot
 from valueIteration import *
-
+from qLearning import QLearning
 
 def main():
     """
@@ -135,21 +135,58 @@ def init(canvas):
 def compGamePlay(canvas):
 
     world = canvas.data["world"]
-    U = canvas.data["U"]
+    bot1 = world.bot1
+    bot2 = world.bot2
     turns = 500
 
-    # this is only for computer versus computer games
-    if world.bot1.botType == 'c' and world.bot2.botType == 'c':
+    # this is only for computer versus computer games 
+    if bot1.botType == 'c' and bot2.botType == 'c':
         for turn in range(turns):
             if not world.isGameOver():
-                if world.bot1.isTurn():
-                    world.performBestAction(world.bot1,U)
-                elif world.bot2.isTurn():
-                    world.performBestAction(world.bot2,U)
+                # q-learning vs value iteration
+                if bot1.strategy == 'q' and bot2.strategy == 'v':
+                    if bot1.isTurn():
+                        Q = canvas.data["Q"]
+                        action = Q.getAction(world, bot1)
+                        world.moveBot(bot1,action)
+                        Q.update(world, bot1)
+                    elif bot2.isTurn():
+                        U = canvas.data["U"]
+                        world.performBestAction(bot2,U)
+                # value iteration versus q-learning
+                elif bot1.strategy == 'v' and bot2.strategy == 'q':
+                    if bot1.isTurn():
+                        U = canvas.data["U"]
+                        world.performBestAction(bot1,U)
+                    elif bot2.isTurn():
+                        Q = canvas.data["Q"]
+                        action = Q.getAction(world, bot2)
+                        world.moveBot(bot2,action)
+                        Q.update(world, bot2)
+                # q-learning versus q-learning
+                elif bot1.strategy == 'q' and bot2.strategy == 'q':
+                    if bot1.isTurn():
+                        Q1 = canvas.data["Q1"]
+                        action = Q1.getAction(world, bot1)
+                        world.moveBot(bot1,action)
+                        Q1.update(world, bot1)
+                    elif bot2.isTurn():
+                        Q2 = canvas.data["Q2"]
+                        action = Q2.getAction(world, bot2)
+                        world.moveBot(bot2,action)
+                        Q2.update(world, bot2)
+                # value iteration vs value iteration
+                elif bot1.strategy == 'v' and bot2.strategy == 'v':
+                    if bot1.isTurn():
+                        U = canvas.data["U"]
+                        world.performBestAction(bot1,U)
+                    elif bot2.isTurn():
+                        U = canvas.data["U"]
+                        world.performBestAction(bot2,U)
 
                 # toggle turn
-                world.bot1.toggleTurn()
-                world.bot2.toggleTurn()
+                bot1.toggleTurn()
+                bot2.toggleTurn()
 
                 # redraw the grid
                 redraw(canvas)
@@ -329,14 +366,23 @@ def loadRobotStrategies(canvas):
             U = runValueIteration(world, bot1, bot2)
             canvas.data["U"] = U
         # both q-learning
-        elif bot1.strategy == 'q' and bot2.strategy == 'q':
-            print 'dont have code for this case yet'
+        elif bot1.strategy == 'q' and bot2.strategy == 'q':# only use Q1 and Q2 for 2 q-learning bots. else it is just Q
+            Q1 = QLearning(world, bot1, bot2)
+            Q2 = QLearning(world, bot1, bot2)
+            canvas.data["Q1"] = Q1
+            canvas.data["Q2"] = Q2
         # q-learning versus value iteration
-        elif bot1.strategy == 'q' and bot2.strategy == 'c':
-            print 'dont have code for this case yet'
+        elif bot1.strategy == 'q' and bot2.strategy == 'v':
+            Q = QLearning(world, bot1, bot2)
+            canvas.data["Q"] = Q
+            U = runValueIteration(world, bot1, bot2)
+            canvas.data["U"] = U
         # value iteration versus q-learning
         elif bot1.strategy == 'v' and bot2.strategy == 'q':
-            print 'dont have code for this case yet'
+            U = runValueIteration(world, bot1, bot2)
+            canvas.data["U"] = U
+            Q = QLearning(world, bot1, bot2)
+            canvas.data["Q"] = Q
 
     # computer versus human   
     elif bot1.botType == 'h' and bot2.botType == 'c':
@@ -346,7 +392,8 @@ def loadRobotStrategies(canvas):
             canvas.data["U"] = U
         # bot 2 is q-learning
         elif bot2.strategy == 'q':
-            print 'dont have code for this case yet'
+            Q = QLearning(world, bot1, bot2)
+            canvas.data["Q"] = Q
     elif bot1.botType == 'c' and bot2.botType == 'h':
         # bot 1 is value iteration
         if bot1.strategy == 'v':
@@ -354,7 +401,8 @@ def loadRobotStrategies(canvas):
             canvas.data["U"] = U
         # bot 1 is q-learning
         elif bot1.strategy == 'q':
-            print 'dont have code for this case yet'
+            Q = QLearning(world, bot1, bot2)
+            canvas.data["Q"] = Q
 
     # human versus human
     # don't load any strategies
@@ -437,19 +485,32 @@ def keyPressed(event):
         redraw(canvas)
         time.sleep(1)
 
-        if not world.isGameOver() and otherBot.isTurn() and otherBot.botType == 'c' and otherBot.strategy == 'v':
-            U = canvas.data["U"]
-            world.performBestAction(otherBot, U)
+        if not world.isGameOver() and otherBot.isTurn() and otherBot.botType == 'c':
+            # is comp bot is value iteration
+            if otherBot.strategy == 'v':
+                U = canvas.data["U"]
+                world.performBestAction(otherBot, U)
 
-            # toggle turn
-            bot1.toggleTurn()
-            bot2.toggleTurn()
+                # toggle turn
+                bot1.toggleTurn()
+                bot2.toggleTurn()
 
-            # redraw the grid
-            redraw(canvas)
+                # redraw the grid
+                redraw(canvas)
 
-    #elif world.isGameOver():
-    #    redraw(canvas)        
+            # if comp bot is q-learning
+            if otherBot.strategy == 'q':
+                Q = canvas.data["Q"]
+                action = Q.getAction(world, otherBot)
+                world.moveBot(otherBot,action)
+                Q.update(world, otherBot)
+
+                # toggle turn
+                bot1.toggleTurn()
+                bot2.toggleTurn()
+
+                # redraw the grid
+                redraw(canvas)
 
 if __name__ == "__main__":
     main()

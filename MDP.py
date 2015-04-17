@@ -6,7 +6,7 @@ class MDP:
     a discount factor
     """
 
-    def __init__(self, world, robot1, robot2, gamma):
+    def __init__(self, world, robot1, robot2):
         self.world = world
         self.robot1 = robot1
         self.robot2 = robot2
@@ -14,7 +14,6 @@ class MDP:
         self.actions = self.getActions()
         self.transModel = self.getTransModel()
         self.rewards = self.getRewardModel()
-        self.gamma = gamma
 
     def getStates(self):
         """
@@ -105,14 +104,3 @@ class MDP:
     # returns true if it is robot 1's turn
     def is_rob1(self, mdpState):
         return mdpState[0] == 1
-
-def straightLineDist(state1,state2):
-    x1 = state1[0]
-    y1 = state1[1]
-
-    x2 = state2[0]
-    y2 = state2[1]
-
-    dist = pow((pow(abs(x1 - x2),2) + pow(abs(y1 - y2),2)), 0.5)
-
-    return dist
