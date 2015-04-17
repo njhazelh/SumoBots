@@ -10,7 +10,7 @@ class Bot:
         self.color = color
         self.turn = turn
         self.failProb = .2
-        self.type = botType
+        self.botType = botType
         self.strategy = strategy
 
     def getLegalActions(self, state, world):

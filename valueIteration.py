@@ -40,7 +40,7 @@ def valueIteration(MDP, eps):
     return U
 
 
-def runValueIteration(world, robot1, robot2, gamma, eps):
+def runValueIteration(world, robot1, robot2):
     """
     This function creates robot states, actions, a transition model, and
     a gamma. Then, using these models, it creates 2 robot classes. Then,
@@ -54,10 +54,10 @@ def runValueIteration(world, robot1, robot2, gamma, eps):
     :return:
     """
     # MDP object
-    mdp = MDP(world, robot1, robot2, gamma)
+    mdp = MDP(world, robot1, robot2, world.gamma)
 
     # utility function for the MDP
-    U = valueIteration(mdp, eps)
+    U = valueIteration(mdp, world.eps)
 
     return U
 

@@ -45,20 +45,14 @@ def main():
                        font=("Helvetica", 32, "bold"))
     canvas.update()
 
-    world = canvas.data["world"]
-    bot1 = canvas.data["bot1"]
-    bot2 = canvas.data["bot2"]
-
-    # run value iteration for computer bot
-    gamma = .3
-    eps = .1
-    U = runValueIteration(world, bot1, bot2, gamma, eps)
-    canvas.data["U"] = U
+    loadRobotStrategies(canvas)
 
     canvas.delete("load")
     canvas.update()
 
     countDown(canvas)
+
+    compGamePlay(canvas)
 
     # Run the Program blocking
     root.mainloop()
@@ -108,6 +102,7 @@ def init(canvas):
     bot1Strategy = canvas.data["bot1Strategy"]
     bot2Strategy = canvas.data["bot2Strategy"]
 
+    # variables used to develop robot strategies
     rows = canvas.data["rows"]
     cols = canvas.data["cols"]
     bot1 = Bot(cols / 2 - 3, rows / 2, 1, 1, "blue", canvas, False, bot1Type, bot1Strategy)
@@ -126,6 +121,32 @@ def init(canvas):
         canvas.data["reset"] = False
         countDown(canvas)
 
+def compGamePlay(canvas):
+
+    world = canvas.data["world"]
+    U = canvas.data["U"]
+    turns = 500
+
+    # this is only for computer versus computer games
+    if world.bot1.botType == 'c' and world.bot2.botType == 'c':
+        for turn in range(turns):
+            if not world.isGameOver():
+                if world.bot1.isTurn():
+                    world.performBestAction(world.bot1,U)
+                elif world.bot2.isTurn():
+                    world.performBestAction(world.bot2,U)
+
+                # toggle turn
+                world.bot1.toggleTurn()
+                world.bot2.toggleTurn()
+
+                # redraw the grid
+                redraw(canvas)
+
+                time.sleep(1)
+
+            elif world.isGameOver():
+                redraw(canvas)
 
 # Redraw the grid
 def redraw(canvas):
@@ -166,7 +187,7 @@ def redraw(canvas):
                            fill="#222",
                            font=("Helvetica", 18, "bold"))
         canvas.create_text(140, cy - 20,
-                           text="Computer",
+                           text="Blue",
                            fill="#22c",
                            font=("Helvetica", 18, "bold"))
     else:
@@ -175,7 +196,7 @@ def redraw(canvas):
                            fill="#222",
                            font=("Helvetica", 18, "bold"))
         canvas.create_text(110, cy - 20,
-                           text="User",
+                           text="Green",
                            fill="#2c2",
                            font=("Helvetica", 18, "bold"))
 
@@ -284,6 +305,49 @@ def initBots(canvas):
     else:
         canvas.data["bot2Strategy"] = None
 
+def loadRobotStrategies(canvas):
+
+    bot1 = canvas.data["bot1"]
+    bot2 = canvas.data["bot2"]
+    world = canvas.data["world"]
+
+    # computer versus computer
+    if bot1.botType == 'c' and bot2.botType == 'c':
+        # both value iteration
+        if bot1.strategy == 'v' and bot2.strategy == 'v':
+            U = runValueIteration(world, bot1, bot2)
+            canvas.data["U"] = U
+        # both q-learning
+        elif bot1.strategy == 'q' and bot2.strategy == 'q':
+            print 'dont have code for this case yet'
+        # q-learning versus value iteration
+        elif bot1.strategy == 'q' and bot2.strategy == 'c':
+            print 'dont have code for this case yet'
+        # value iteration versus q-learning
+        elif bot1.strategy == 'v' and bot2.strategy == 'q':
+            print 'dont have code for this case yet'
+
+    # computer versus human   
+    elif bot1.botType == 'h' and bot2.botType == 'c':
+        # bot 2 is value iteration
+        if bot2.strategy == 'v':
+            U = runValueIteration(world, bot1, bot2)
+            canvas.data["U"] = U
+        # bot 2 is q-learning
+        elif bot2.strategy == 'q':
+            print 'dont have code for this case yet'
+    elif bot1.botType == 'c' and bot2.botType == 'h':
+        # bot 1 is value iteration
+        if bot1.strategy == 'v':
+            U = runValueIteration(world, bot1, bot2)
+            canvas.data["U"] = U
+        # bot 1 is q-learning
+        elif bot1.strategy == 'q':
+            print 'dont have code for this case yet'
+
+    # human versus human
+    # don't load any strategies
+
 # ============================================================================
 #     Callbacks
 # ============================================================================
@@ -307,8 +371,8 @@ def keyPressed(event):
     :param event: The Key Event
     """
 
-    # Do not do normal key press operations before world is initialized (during robot setup)
-    if event.char in ["q", "v", "c", "h"]:
+    # Do not do normal key press operations while robot types and strategies are being determined
+    if event.char not in ["e", "r", "d"] and event.keysym not in ["Up", "Down", "Left", "Right"]:
         return
 
     canvas = event.widget.canvas
@@ -331,28 +395,40 @@ def keyPressed(event):
         redraw(canvas)
         return
 
-    # Process keys that only work if the game is not over
-    if not world.isGameOver() and bot2.isTurn():
-        if (event.keysym == "Up"):
-            world.moveBot('North')
-        elif (event.keysym == "Down"):
-            world.moveBot('South')
-        elif (event.keysym == "Left"):
-            world.moveBot('West')
-        elif (event.keysym == "Right"):
-            world.moveBot('East')
+    # Process keys that only work if the game is not over and it is the user's turn
+    #for bot in (bot1, bot2):
+    #    print 'starting for loop'
+        # only move the bot if it is a human player and it is it's turn
 
-        # toggle turn
-        bot1.toggleTurn()
-        bot2.toggleTurn()
+    if bot1.botType == 'h' and bot1.isTurn():
+        userBot = bot1
+        otherBot = bot2
+    elif bot2.botType == 'h' and bot2.isTurn():
+        userBot = bot2
+        otherBot = bot1
+
+    # move the user robot
+    if not world.isGameOver():
+        if (event.keysym == "Up"):
+            world.moveBot(userBot,'North')
+        elif (event.keysym == "Down"):
+            world.moveBot(userBot,'South')
+        elif (event.keysym == "Left"):
+            world.moveBot(userBot,'West')
+        elif (event.keysym == "Right"):
+            world.moveBot(userBot,'East')
+
+        # toggle turns
+        userBot.toggleTurn()
+        otherBot.toggleTurn()
 
         # redraw the grid
         redraw(canvas)
         time.sleep(1)
 
-        if not world.isGameOver() and bot1.isTurn():
+        if not world.isGameOver() and otherBot.isTurn() and otherBot.botType == 'c' and otherBot.strategy == 'v':
             U = canvas.data["U"]
-            world.performBestAction(U)
+            world.performBestAction(otherBot, U)
 
             # toggle turn
             bot1.toggleTurn()
@@ -360,9 +436,9 @@ def keyPressed(event):
 
             # redraw the grid
             redraw(canvas)
-    elif world.isGameOver():
-        redraw(canvas)
 
+    #elif world.isGameOver():
+    #    redraw(canvas)        
 
 if __name__ == "__main__":
     main()

@@ -159,37 +159,52 @@ class World:
                 return nextBot1X > centerX
         return False
 
-    def performBestAction(self, U):
+    def performBestAction(self, compBot, U):
         """
         Choose and perform the best action.
         :param U: (turn, bot1, bot2) are U key values
         """
-        compBotState = (self.bot1.xPos, self.bot1.yPos)
-        userBotState = (self.bot2.xPos, self.bot2.yPos)
+
+        for bot in (self.bot1,self.bot2):
+            if bot != compBot:
+                otherBot = bot
+            if bot == self.bot1:
+                turn = 1
+            elif bot == self.bot2:
+                turn = 2
+
+        compBotState = (compBot.xPos, compBot.yPos)
+        otherBotState = (otherBot.xPos, otherBot.yPos)
 
         maxUtil = 0
         bestAction = None
-        for action in self.bot1.getLegalActions(compBotState, self):
-            nextState = self.bot1.nextState(compBotState, action)
-            nextUtil = U[1, nextState, userBotState]
+        for action in compBot.getLegalActions(compBotState, self):
+            nextState = compBot.nextState(compBotState, action)
+            nextUtil = U[turn, nextState, otherBotState]
             if nextUtil > maxUtil:
                 maxUtil = nextUtil
                 bestAction = action
-        self.moveBot(bestAction)
+        self.moveBot(compBot,bestAction)
 
-    def moveBot(self, action):
+    def moveBot(self, turnBot, action):
         """
         Move the Robot Bot
         Process moving the bot.
-        :param action: The action the bot should perform.
+        :param bot: the bot whose turn it is, action: The action the bot should perform.
         """
         drow = 0
         dcol = 0
 
-	if self.bot1.isTurn():
-	    action = self.bot1.randomizeAction(action,self)
-	else:
-	    action = self.bot2.randomizeAction(action,self)
+
+        #if self.bot1.isTurn():
+        #    action = self.bot1.randomizeAction(action,self)
+        #else:
+        #    action = self.bot2.randomizeAction(action,self)
+        for bot in (self.bot1,self.bot2):
+            if bot != turnBot:
+                otherBot = bot
+
+        action = turnBot.randomizeAction(action, self)
 
         if action == 'North':
             drow = -1
@@ -200,34 +215,34 @@ class World:
         elif action == 'West':
             dcol = -1
 
-        if self.bot1.isTurn():
-            nextY = self.bot1.yPos + drow
-            nextX = self.bot1.xPos + dcol
+        #if self.bot1.isTurn():
+        nextY = turnBot.yPos + drow
+        nextX = turnBot.xPos + dcol
 
-            if nextY == self.bot2.yPos and nextX == self.bot2.xPos:
-                self.bot2.xPos += dcol
-                self.bot2.yPos += drow
+        if nextY == otherBot.yPos and nextX == otherBot.xPos:
+            otherBot.xPos += dcol
+            otherBot.yPos += drow
 
-                if self.sumoGrid[self.bot2.yPos][self.bot2.xPos] == -9:
-                    self.setGameOver(True)
-
-            self.bot1.xPos += dcol
-            self.bot1.yPos += drow
-
-            if self.sumoGrid[self.bot1.yPos][self.bot1.xPos] == -9:
+            if self.sumoGrid[otherBot.yPos][otherBot.xPos] == -9:
                 self.setGameOver(True)
 
-        elif self.bot2.isTurn():
-            nextY = self.bot2.yPos + drow
-            nextX = self.bot2.xPos + dcol
-            if nextY == self.bot1.yPos and nextX == self.bot1.xPos:
-                self.bot1.xPos += dcol
-                self.bot1.yPos += drow
-                if self.sumoGrid[self.bot1.yPos][self.bot1.xPos] == -9:
-                    self.setGameOver(True)
-            self.bot2.xPos += dcol
-            self.bot2.yPos += drow
+        turnBot.xPos += dcol
+        turnBot.yPos += drow
 
-            if self.sumoGrid[self.bot2.yPos][self.bot2.xPos] == -9:
-                self.setGameOver(True)
-            return
+        if self.sumoGrid[turnBot.yPos][turnBot.xPos] == -9:
+            self.setGameOver(True)
+
+        #elif self.bot2.isTurn():
+        #    nextY = self.bot2.yPos + drow
+        #    nextX = self.bot2.xPos + dcol
+        #    if nextY == self.bot1.yPos and nextX == self.bot1.xPos:
+        #        self.bot1.xPos += dcol
+        #        self.bot1.yPos += drow
+        #        if self.sumoGrid[self.bot1.yPos][self.bot1.xPos] == -9:
+        #            self.setGameOver(True)
+        #    self.bot2.xPos += dcol
+        #    self.bot2.yPos += drow
+
+        #    if self.sumoGrid[self.bot2.yPos][self.bot2.xPos] == -9:
+        #        self.setGameOver(True)
+        #    return
