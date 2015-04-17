@@ -99,14 +99,25 @@ def init(canvas):
     bot1Type = canvas.data["bot1Type"]
     bot2Type = canvas.data["bot2Type"]
 
+    # this is to ensure that if there is a human in the game, it always goes first
+    if bot1Type == 'h' and bot2Type == 'c':
+        bot1InitTurn = True
+        bot2InitTurn = False
+    elif bot2Type == 'h' and bot1Type == 'c':
+        bot1InitTurn = False
+        bot2InitTurn = True
+    else:
+        bot1InitTurn = True
+        bot2InitTurn = False
+
     bot1Strategy = canvas.data["bot1Strategy"]
     bot2Strategy = canvas.data["bot2Strategy"]
 
     # variables used to develop robot strategies
     rows = canvas.data["rows"]
     cols = canvas.data["cols"]
-    bot1 = Bot(cols / 2 - 3, rows / 2, 1, 1, "blue", canvas, False, bot1Type, bot1Strategy)
-    bot2 = Bot(cols / 2 + 3, rows / 2, 1, 1, "green", canvas, True, bot2Type, bot2Strategy)
+    bot1 = Bot(cols / 2 - 3, rows / 2, 1, 1, "blue", canvas, bot1InitTurn, bot1Type, bot1Strategy)
+    bot2 = Bot(cols / 2 + 3, rows / 2, 1, 1, "green", canvas, bot2InitTurn, bot2Type, bot2Strategy)
     world = World(rows, cols, bot1, bot2)
 
     canvas.data["world"] = world
