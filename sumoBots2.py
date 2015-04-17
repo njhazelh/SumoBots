@@ -36,6 +36,9 @@ def main():
     canvas.data["cols"] = cols
     canvas.data["reset"] = False
 
+    # this initializes the type of bots that will be used in game play
+    initBots(canvas)
+
     init(canvas)
 
     canvas.create_text(canvasWidth / 2, (canvasHeight / 2) - 50, text="Loading...", tag="load", fill="red",
@@ -43,13 +46,13 @@ def main():
     canvas.update()
 
     world = canvas.data["world"]
-    compBot = canvas.data["compBot"]
-    userBot = canvas.data["userBot"]
+    bot1 = canvas.data["bot1"]
+    bot2 = canvas.data["bot2"]
 
     # run value iteration for computer bot
     gamma = .3
     eps = .1
-    U = runValueIteration(world, compBot, userBot, gamma, eps)
+    U = runValueIteration(world, bot1, bot2, gamma, eps)
     canvas.data["U"] = U
 
     canvas.delete("load")
@@ -99,15 +102,21 @@ def init(canvas):
     """
     # print usage to terminal window
 
+    bot1Type = canvas.data["bot1Type"]
+    bot2Type = canvas.data["bot2Type"]
+
+    bot1Strategy = canvas.data["bot1Strategy"]
+    bot2Strategy = canvas.data["bot2Strategy"]
+
     rows = canvas.data["rows"]
     cols = canvas.data["cols"]
-    compBot = Bot(cols / 2 - 3, rows / 2, 1, 1, "blue", canvas, False)
-    userBot = Bot(cols / 2 + 3, rows / 2, 1, 1, "green", canvas, True)
-    world = World(rows, cols, compBot, userBot)
+    bot1 = Bot(cols / 2 - 3, rows / 2, 1, 1, "blue", canvas, False, bot1Type, bot1Strategy)
+    bot2 = Bot(cols / 2 + 3, rows / 2, 1, 1, "green", canvas, True, bot2Type, bot2Strategy)
+    world = World(rows, cols, bot1, bot2)
 
     canvas.data["world"] = world
-    canvas.data["compBot"] = compBot
-    canvas.data["userBot"] = userBot
+    canvas.data["bot1"] = bot1
+    canvas.data["bot2"] = bot2
     canvas.data["sumoGrid"] = world.getSumoGrid()
 
     # redraw the canvas
@@ -135,8 +144,8 @@ def redraw(canvas):
                        tag="title", fill="#222", font=("Helvetica", 18, "bold"))
 
     world = canvas.data["world"]
-    compBot = canvas.data["compBot"]
-    userBot = canvas.data["userBot"]
+    bot1 = canvas.data["bot1"]
+    bot2 = canvas.data["bot2"]
 
     # create the sumo ring
     canvas.create_oval(120, 120, 480, 480, width=5, fill="#eee")
@@ -151,7 +160,7 @@ def redraw(canvas):
     cx = canvas.data["canvasWidth"] - 100
     cy = canvas.data["canvasHeight"] - 10
 
-    if compBot.isTurn():
+    if bot1.isTurn():
         canvas.create_text(50, cy - 20,
                            text="Turn: ",
                            fill="#222",
@@ -210,8 +219,8 @@ def drawSumoCell(canvas, sumoGrid, row, col):
     top = row * cellSize
     bottom = top + cellSize
 
-    compBot = canvas.data["compBot"]
-    userBot = canvas.data["userBot"]
+    bot1 = canvas.data["bot1"]
+    bot2 = canvas.data["bot2"]
     world = canvas.data["world"]
 
     # For debugging: color background and draw cell values.
@@ -227,13 +236,53 @@ def drawSumoCell(canvas, sumoGrid, row, col):
         canvas.create_text(left + cellSize / 2, top + cellSize / 2,
                            text=str(sumoGrid[row][col]), font=("Helvetica", 14, "bold"))
 
-    if (compBot.isAt(col, row)):
+    if (bot1.isAt(col, row)):
         # Draw the Bot
-        canvas.create_rectangle(left, top, right, bottom, fill=compBot.color)
-    elif (userBot.isAt(col, row)):
+        canvas.create_rectangle(left, top, right, bottom, fill=bot1.color)
+    elif (bot2.isAt(col, row)):
         # Draw the Enemy Bot
-        canvas.create_rectangle(left, top, right, bottom, fill=userBot.color)
+        canvas.create_rectangle(left, top, right, bottom, fill=bot2.color)
 
+def initBots(canvas):
+    # First determine if the first bot will be a human or a computer
+    bot1Type = raw_input("For robot 1 to be human, press h, for robot 1 to be a computer, press c")
+    while bot1Type not in ['h', 'c']:
+        print 'Please enter either h or c'
+        bot1Type = raw_input("For robot 1 to be human, press h, for robot 1 to be a computer, press c")
+
+    # Then, if it is a computer, if it will use valueIteration or q-learning
+    if bot1Type == 'c':
+        bot1Strategy = raw_input("For robot 1 to use value iteration, press v, for robot 1 to use Q-Learning, press q")
+        while bot1Strategy not in ['v', 'q']:
+            print 'Please enter either v or q'
+            bot1Strategy = raw_input("For robot 1 to use value iteration, press v, for robot 1 to use Q-Learning, press q")
+
+    # Now repeat for the second robot
+    bot2Type = raw_input("For robot 2 to be human, press h, for robot 2 to be a computer, press c")
+    while bot2Type not in ['h', 'c']:
+        print 'Please enter either h or c'
+        bot1Type = raw_input("For robot 2 to be human, press h, for robot 2 to be a computer, press c")
+
+    # Then, if it is a computer, if it will use valueIteration or q-learning
+    if bot2Type == 'c':
+        bot2Strategy = raw_input("For robot 2 to use value iteration, press v, for robot 2 to use Q-Learning, press q")
+        while bot2Strategy not in ['v', 'q']:
+            print 'Please enter either v or q'
+            bot2Strategy = raw_input("For robot 2 to use value iteration, press v, for robot 2 to use Q-Learning, press q")
+
+    # add info to canvas
+    canvas.data["bot1Type"] = bot1Type
+    canvas.data["bot2Type"] = bot2Type
+
+    if bot1Type == 'c':
+        canvas.data["bot1Strategy"] = bot1Strategy
+    else:
+        canvas.data["bot1Strategy"] = None
+
+    if bot2Type == 'c':
+        canvas.data["bot2Strategy"] = bot2Strategy
+    else:
+        canvas.data["bot2Strategy"] = None
 
 # ============================================================================
 #     Callbacks
@@ -257,13 +306,18 @@ def keyPressed(event):
     Need to handle keypress up, down, left, right
     :param event: The Key Event
     """
+
+    # Do not do normal key press operations before world is initialized (during robot setup)
+    if event.char in ["q", "v", "c", "h"]:
+        return
+
     canvas = event.widget.canvas
     world = canvas.data["world"]
-    compBot = canvas.data["compBot"]
-    userBot = canvas.data["userBot"]
+    bot1 = canvas.data["bot1"]
+    bot2 = canvas.data["bot2"]
 
     # process keys that work even if the game is over
-    if (event.char == "q"):
+    if (event.char == "e"):
         world.setGameOver(True)
         redraw(canvas)
         return
@@ -278,7 +332,7 @@ def keyPressed(event):
         return
 
     # Process keys that only work if the game is not over
-    if not world.isGameOver() and userBot.isTurn():
+    if not world.isGameOver() and bot2.isTurn():
         if (event.keysym == "Up"):
             world.moveBot('North')
         elif (event.keysym == "Down"):
@@ -289,20 +343,20 @@ def keyPressed(event):
             world.moveBot('East')
 
         # toggle turn
-        compBot.toggleTurn()
-        userBot.toggleTurn()
+        bot1.toggleTurn()
+        bot2.toggleTurn()
 
         # redraw the grid
         redraw(canvas)
         time.sleep(1)
 
-        if not world.isGameOver() and compBot.isTurn():
+        if not world.isGameOver() and bot1.isTurn():
             U = canvas.data["U"]
             world.performBestAction(U)
 
             # toggle turn
-            compBot.toggleTurn()
-            userBot.toggleTurn()
+            bot1.toggleTurn()
+            bot2.toggleTurn()
 
             # redraw the grid
             redraw(canvas)

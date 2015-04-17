@@ -2,7 +2,7 @@
 import random
 
 class Bot:
-    def __init__(self, xPos, yPos, power, speed, color, canvas, turn):
+    def __init__(self, xPos, yPos, power, speed, color, canvas, turn, botType, strategy):
         self.xPos = xPos  # int for row of bot
         self.yPos = yPos  # int for col of bot
         self.power = power  # int for how many spaces a bot can push another bot
@@ -10,6 +10,8 @@ class Bot:
         self.color = color
         self.turn = turn
         self.failProb = .2
+        self.type = botType
+        self.strategy = strategy
 
     def getLegalActions(self, state, world):
         actions = []
