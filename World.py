@@ -185,6 +185,12 @@ class World:
         """
         drow = 0
         dcol = 0
+
+	if self.bot1.isTurn():
+	    action = self.bot1.randomizeAction(action,self)
+	else:
+	    action = self.bot2.randomizeAction(action,self)
+
         if action == 'North':
             drow = -1
         elif action == 'South':

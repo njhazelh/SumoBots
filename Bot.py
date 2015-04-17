@@ -1,4 +1,6 @@
 # Bot
+import random
+
 class Bot:
     def __init__(self, xPos, yPos, power, speed, color, canvas, turn):
         self.xPos = xPos  # int for row of bot
@@ -77,4 +79,34 @@ class Bot:
 
     def toggleTurn(self):
         self.turn = not self.turn
+
+    def randomizeAction(self, action,world):
+	state = []
+	state.append(self.xPos)
+	state.append(self.yPos)
+
+	legalActions = self.getLegalActions(state,world)
+	weightedActions = []
+	distributionSpread = self.failProb / (len(legalActions) - 1)
+
+	for legalAction in legalActions:
+	    if legalAction == action:
+		weightedActions.append((legalAction,(1-self.failProb)))
+	    else:
+		weightedActions.append((legalAction,distributionSpread))
+
+	space = {}
+        current = 0
+	
+        for choice, weight in weightedActions:
+            if weight > 0:
+                space[current] = choice
+                current += weight
+        rand = random.uniform(0, current)
+        for key in sorted(space.keys() + [current]):
+            if rand < key:
+                return choice
+            choice = space[key]
+
+	return action
 
