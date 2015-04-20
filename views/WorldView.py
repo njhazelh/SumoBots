@@ -11,7 +11,6 @@ class WorldView:
         self.height = height
 
     def render(self):
-        print "RENDERING WORLD"
         c = self.canvas
         c.delete(ALL)
 
