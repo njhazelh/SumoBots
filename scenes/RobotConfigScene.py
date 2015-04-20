@@ -1,7 +1,8 @@
 from Tkinter import *
-from gui import SCENES
+from scenes import SCENES
 
-from gui.Scene import Scene
+from scenes.Scene import Scene
+from strategies import STRATEGIES
 
 
 __author__ = 'Nick'
@@ -46,11 +47,11 @@ class RobotConfigScene(Scene):
             next_scene = SCENES.ARENA
 
         if key.keysym == "q":
-            self.config[self.robot] = "q"
+            self.config[self.robot] = STRATEGIES.Q_LEARNING
         elif key.keysym == "h":
-            self.config[self.robot] = "h"
+            self.config[self.robot] = STRATEGIES.HUMAN
         elif key.keysym == "v":
-            self.config[self.robot] = "v"
+            self.config[self.robot] = STRATEGIES.VALUE_ITERATION
 
         self.master.set_scene(next_scene, config=self.config)
 

@@ -1,5 +1,5 @@
-from gui import SCENES
-from gui.Scene import Scene
+from scenes import SCENES
+from scenes.Scene import Scene
 
 __author__ = 'Nick'
 

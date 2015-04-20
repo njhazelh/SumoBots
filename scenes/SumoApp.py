@@ -1,7 +1,7 @@
-from gui import SCENES
-from gui.ArenaScene import  ArenaScene
-from gui.RobotConfigScene import RobotConfigScene
-from gui.TitleScene import TitleScene
+from scenes import SCENES
+from scenes.ArenaScene import  ArenaScene
+from scenes.RobotConfigScene import RobotConfigScene
+from scenes.TitleScene import TitleScene
 
 __author__ = 'Nick'
 

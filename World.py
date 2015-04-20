@@ -43,7 +43,7 @@ class World:
         for row in range(self.rows):
             for col in range(self.cols):
                 dCenter = ((col - cx) ** 2 + (row - cy) ** 2) ** 0.5
-		
+
                 if round(dCenter) > self.ring_radius:
                     self.sumoGrid[row][col] = -9
                 else:
@@ -201,7 +201,7 @@ class World:
         #    action = self.bot1.randomizeAction(action,self)
         #else:
         #    action = self.bot2.randomizeAction(action,self)
-        for bot in (self.bot1,self.bot2):
+        for bot in (self.bot1, self.bot2):
             if bot != turnBot:
                 otherBot = bot
 
