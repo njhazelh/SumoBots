@@ -146,18 +146,18 @@ class World:
                     return nextBot2X < centerX
                 elif action == 'West':
                     return nextBot2X > centerX
-        else:
-            nextBot1X = currentBot1X + dcol
-            nextBot1Y = currentBot1Y + drow
+            else:
+                nextBot1X = currentBot1X + dcol
+                nextBot1Y = currentBot1Y + drow
 
-            if action == 'North':
-                return nextBot1Y < centerY
-            elif action == 'South':
-                return nextBot1Y > centerY
-            elif action == 'East':
-                return nextBot1X < centerX
-            elif action == 'West':
-                return nextBot1X > centerX
+                if action == 'North':
+                    return nextBot1Y < centerY
+                elif action == 'South':
+                    return nextBot1Y > centerY
+                elif action == 'East':
+                    return nextBot1X < centerX
+                elif action == 'West':
+                    return nextBot1X > centerX
         return False
 
     def performBestAction(self, compBot, U):

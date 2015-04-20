@@ -13,7 +13,7 @@ class MDP:
         self.states = self.getStates()
         self.actions = self.getActions()
         self.transModel = self.getTransModel()
-        self.rewards = self.getRewardModel()
+        self.rewards = self.getNewRewardModel(world)
 
     def getStates(self):
         """
@@ -100,6 +100,47 @@ class MDP:
             else:
                 mdpRewards[mdpState] = 15 - dist
         return mdpRewards
+    
+    def getNewRewardModel(self, world):
+        """
+        Using this function, rewards are based on robot's position according to how close it is to 
+        the boundary, as well as if the robot is between the other robot, and the closest boundary.
+        """
+        mdpRewards = {}
+        rows = world.getNumRows()
+        cols = world.getNumCols()
+        cx = (cols - 1) / 2.0
+        cy = (rows - 1) / 2.0
+        for mdpState in self.states:
+            dist = util.manhattanDistance(mdpState[1], mdpState[2])
+            mdpRewards[mdpState] = 15 - dist
+
+            rob1Pos = mdpState[1]
+            rob1RowPos = rob1Pos[0]
+            rob1ColPos = rob1Pos[1]
+            rob1DCenter = ((rob1ColPos - cx) ** 2 + (rob1RowPos - cy) ** 2) ** 0.5
+            
+            rob2Pos = mdpState[2]
+            rob2RowPos = rob2Pos[0]
+            rob2ColPos = rob2Pos[1]
+            rob2DCenter = ((rob2ColPos - cx) ** 2 + (rob2RowPos - cy) ** 2) ** 0.5
+            
+            if self.is_rob1(mdpState):
+                #Check to see whether the robot is on the edge of the boundary
+                if round(rob1DCenter) == world.ring_radius and round(rob2DCenter) <= world.ring_radius:
+                    mdpRewards[mdpState] -= 10
+                    #If robot is on boundary and next to the opponent
+                    if dist == 1:
+                        mdpRewards[mdpState] -= 10
+            else:
+                if round(rob2DCenter) == world.ring_radius and round(rob1DCenter) <= world.ring_radius:
+                    mdpRewards[mdpState] -= 10
+                    if dist == 1:
+                        mdpRewards[mdpState] -= 10
+    
+        return mdpRewards
+            
+    
 
     # returns true if it is robot 1's turn
     def is_rob1(self, mdpState):
