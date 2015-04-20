@@ -1,6 +1,8 @@
 from Tkinter import *
 from datetime import datetime
 
+import SCENES
+
 from scenes.Scene import Scene
 from models.World import World
 from views.WorldView import WorldView
@@ -27,6 +29,7 @@ class ArenaScene(Scene):
         self.rows = 15
         self.cols = 15
         self.turn_start = None
+        self.resetting = False
 
         self.world = World(self.config)
 
@@ -39,14 +42,18 @@ class ArenaScene(Scene):
         self.canvas.bind("<Key>", self.on_key)
 
         # Start the game loop
-        self.world_view.render()
-        self.after(1, self.game_loop)
+        self.render()
+        self.after_id = self.after(1000, self.game_loop)
 
     def game_loop(self):
         """
         Update the world and render.
         The update may not complete due to other
         """
+        if self.resetting:
+            # Make sure that no old after calls run while resetting.
+            return
+
         update_successful = self.update()
         self.render()
 
@@ -60,11 +67,11 @@ class ArenaScene(Scene):
             dt = now - self.turn_start
             self.turn_start = None
             dt_ms = int(dt.total_seconds() * 1000)
-            after_ms = max(0, 500 - dt_ms)
+            after_ms = max(0, 1000 - dt_ms)
             self.after(after_ms, self.game_loop)
         else:
             # update was not completed. Allow Tk mainloop to get events.
-            self.after(0, self.game_loop)
+            self.after_id = self.after(0, self.game_loop)
 
     def render(self):
         """
@@ -83,6 +90,8 @@ class ArenaScene(Scene):
         """
         Destroy the canvas to clean up before destruction.
         """
+        self.resetting = True
+        self.after_cancel(self.after_id)
         self.canvas.destroy()
 
     def on_key(self, event):
@@ -95,7 +104,8 @@ class ArenaScene(Scene):
             self.world.debug = not self.world.debug
         elif event.keysym == "r":
             # Reset everything somehow.
-            pass
+            self.master.set_scene(SCENES.ARENA, config=self.config)
+            return
         else:
             self.world.key_event = event
         self.world_view.render()
