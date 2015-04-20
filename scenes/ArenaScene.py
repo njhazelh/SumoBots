@@ -52,11 +52,11 @@ class ArenaScene(Scene):
             # Make sure that no old after calls run while resetting.
             return
 
-        update_successful = self.update()
-        self.render()
-
         if self.turn_start is None:
             self.turn_start = datetime.now()
+
+        update_successful = self.update()
+        self.render()
 
         if update_successful:
             # If turn took longer than 1 second, repeat immediately.
