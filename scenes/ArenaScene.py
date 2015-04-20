@@ -26,8 +26,6 @@ class ArenaScene(Scene):
 
         self.width = 600
         self.height = 600
-        self.rows = 15
-        self.cols = 15
         self.turn_start = None
         self.resetting = False
 

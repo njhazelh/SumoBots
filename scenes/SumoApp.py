@@ -17,7 +17,6 @@ class SumoApp(Frame):
 
     def set_scene(self, scene, **kwargs):
         if self.scene is not None:
-            print "Destroying %s" % (self.scene)
             self.scene.destroy()
             self.pack()
         if scene == SCENES.TITLE:

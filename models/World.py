@@ -112,6 +112,10 @@ class World:
             self.game_over = True
             self.state = WORLD_STATES.GAME_OVER
 
+        if self.sumo_grid[moved_bot.x][moved_bot.y] == -9:
+            self.game_over = True
+            self.state = WORLD_STATES.GAME_OVER
+
     def on_key(self, event):
         """
         Record a key event should it be needed.

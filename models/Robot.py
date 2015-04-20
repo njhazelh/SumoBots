@@ -31,7 +31,7 @@ class Robot:
         self.x = x
         self.y = y
         self.color = color
-        self.fail_prob = 0.2
+        self.fail_prob = 0.1
         self.last_action = None
 
     def update(self):
@@ -40,7 +40,7 @@ class Robot:
         :return: True if the update was completed, else False.
         """
         action = self.strategy.choose_action()
-        if action is None:
+        if action is None or action not in self.get_legal_actions():
             return False
         else:
             action = self.add_action_noise(action)
@@ -52,25 +52,27 @@ class Robot:
         """
         :return: The actions that will not end the game for this robot.
         """
-        actions = []
-        x = self.x
-        y = self.y
-        grid = self.world.sumo_grid
+        # actions = []
+        # x = self.x
+        # y = self.y
+        # grid = self.world.sumo_grid
 
         # For now just return 1 space to the 'West', 'East', 'North', 'South'
-        if grid[x + 1][y] != -9:
-            actions.append(ACTIONS.MOVE_EAST)
+        # if grid[x + 1][y] != -9:
+        #     actions.append(ACTIONS.MOVE_EAST)
+        #
+        # if grid[x - 1][y] != -9:
+        #     actions.append(ACTIONS.MOVE_WEST)
+        #
+        # if grid[x][y - 1] != -9:
+        #     actions.append(ACTIONS.MOVE_NORTH)
+        #
+        # if grid[x][y + 1] != -9:
+        #     actions.append(ACTIONS.MOVE_SOUTH)
 
-        if grid[x - 1][y] != -9:
-            actions.append(ACTIONS.MOVE_WEST)
-
-        if grid[x][y - 1] != -9:
-            actions.append(ACTIONS.MOVE_NORTH)
-
-        if grid[x][y + 1] != -9:
-            actions.append(ACTIONS.MOVE_SOUTH)
-
-        return actions
+        # I think the robot should be able to kill itself.  This will also
+        # show that we've taught the robot not to kill itself.
+        return [ACTIONS.MOVE_EAST, ACTIONS.MOVE_SOUTH, ACTIONS.MOVE_NORTH, ACTIONS.MOVE_WEST]
 
     def add_action_noise(self, action):
         """
@@ -87,8 +89,10 @@ class Robot:
                 weighted_actions.append(((1 - self.fail_prob), legal_action))
             else:
                 weighted_actions.append((distribution_spread, legal_action))
-
-        return util.chooseFromDistribution(weighted_actions)
+        print weighted_actions
+        new_action = util.chooseFromDistribution(weighted_actions)
+        print new_action
+        return new_action
 
     def apply_action(self, action):
         """
