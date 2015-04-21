@@ -1,7 +1,10 @@
 from Tkconstants import ALL
+
 from models import WORLD_STATES
 
+
 __author__ = 'Nick'
+
 
 class WorldView:
     def __init__(self, world, canvas, width, height):
@@ -50,7 +53,6 @@ class WorldView:
                           font=("Helvetica", 32, "bold"))
         elif self.world.state == WORLD_STATES.COUNT_DOWN:
             text = self.world.count if self.world.count != 0 else "FIGHT!"
-            print text
             c.create_text(self.width / 2,
                           self.height / 2,
                           text=text,

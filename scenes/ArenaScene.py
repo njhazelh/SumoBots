@@ -2,7 +2,6 @@ from Tkinter import *
 from datetime import datetime
 
 import SCENES
-
 from Scene import Scene
 from models.World import World
 from views.WorldView import WorldView

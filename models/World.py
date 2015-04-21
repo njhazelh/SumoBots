@@ -1,4 +1,4 @@
-import ACTIONS
+from strategies import ACTIONS
 from models.Robot import Robot
 import WORLD_STATES
 from strategies import STRATEGIES

@@ -3,10 +3,11 @@
 import time
 from Tkinter import *
 
-from World import World
 from Bot import Bot
+from trash.World import World
 from valueIteration import *
 from qLearning import QLearning
+
 
 def main():
     """
@@ -132,8 +133,8 @@ def init(canvas):
         canvas.data["reset"] = False
         countDown(canvas)
 
-def compGamePlay(canvas):
 
+def compGamePlay(canvas):
     world = canvas.data["world"]
     bot1 = world.bot1
     bot2 = world.bot2
@@ -148,41 +149,41 @@ def compGamePlay(canvas):
                     if bot1.isTurn():
                         Q = canvas.data["Q"]
                         action = Q.getAction(world, bot1)
-                        world.moveBot(bot1,action)
+                        world.moveBot(bot1, action)
                         Q.update(world, bot1)
                     elif bot2.isTurn():
                         U = canvas.data["U"]
-                        world.performBestAction(bot2,U)
+                        world.performBestAction(bot2, U)
                 # value iteration versus q-learning
                 elif bot1.strategy == 'v' and bot2.strategy == 'q':
                     if bot1.isTurn():
                         U = canvas.data["U"]
-                        world.performBestAction(bot1,U)
+                        world.performBestAction(bot1, U)
                     elif bot2.isTurn():
                         Q = canvas.data["Q"]
                         action = Q.getAction(world, bot2)
-                        world.moveBot(bot2,action)
+                        world.moveBot(bot2, action)
                         Q.update(world, bot2)
                 # q-learning versus q-learning
                 elif bot1.strategy == 'q' and bot2.strategy == 'q':
                     if bot1.isTurn():
                         Q1 = canvas.data["Q1"]
                         action = Q1.getAction(world, bot1)
-                        world.moveBot(bot1,action)
+                        world.moveBot(bot1, action)
                         Q1.update(world, bot1)
                     elif bot2.isTurn():
                         Q2 = canvas.data["Q2"]
                         action = Q2.getAction(world, bot2)
-                        world.moveBot(bot2,action)
+                        world.moveBot(bot2, action)
                         Q2.update(world, bot2)
                 # value iteration vs value iteration
                 elif bot1.strategy == 'v' and bot2.strategy == 'v':
                     if bot1.isTurn():
                         U = canvas.data["U"]
-                        world.performBestAction(bot1,U)
+                        world.performBestAction(bot1, U)
                     elif bot2.isTurn():
                         U = canvas.data["U"]
-                        world.performBestAction(bot2,U)
+                        world.performBestAction(bot2, U)
 
                 # toggle turn
                 bot1.toggleTurn()
@@ -195,6 +196,7 @@ def compGamePlay(canvas):
 
             elif world.isGameOver():
                 redraw(canvas)
+
 
 # Redraw the grid
 def redraw(canvas):
@@ -312,6 +314,7 @@ def drawSumoCell(canvas, sumoGrid, row, col):
         # Draw the Enemy Bot
         canvas.create_rectangle(left, top, right, bottom, fill=bot2.color)
 
+
 def initBots(canvas):
     # First determine if the first bot will be a human or a computer
     bot1Type = raw_input("For robot 1 to be human, press h, for robot 1 to be a computer, press c")
@@ -324,7 +327,8 @@ def initBots(canvas):
         bot1Strategy = raw_input("For robot 1 to use value iteration, press v, for robot 1 to use Q-Learning, press q")
         while bot1Strategy not in ['v', 'q']:
             print 'Please enter either v or q'
-            bot1Strategy = raw_input("For robot 1 to use value iteration, press v, for robot 1 to use Q-Learning, press q")
+            bot1Strategy = raw_input(
+                "For robot 1 to use value iteration, press v, for robot 1 to use Q-Learning, press q")
 
     # Now repeat for the second robot
     bot2Type = raw_input("For robot 2 to be human, press h, for robot 2 to be a computer, press c")
@@ -337,7 +341,8 @@ def initBots(canvas):
         bot2Strategy = raw_input("For robot 2 to use value iteration, press v, for robot 2 to use Q-Learning, press q")
         while bot2Strategy not in ['v', 'q']:
             print 'Please enter either v or q'
-            bot2Strategy = raw_input("For robot 2 to use value iteration, press v, for robot 2 to use Q-Learning, press q")
+            bot2Strategy = raw_input(
+                "For robot 2 to use value iteration, press v, for robot 2 to use Q-Learning, press q")
 
     # add info to canvas
     canvas.data["bot1Type"] = bot1Type
@@ -353,8 +358,8 @@ def initBots(canvas):
     else:
         canvas.data["bot2Strategy"] = None
 
-def loadRobotStrategies(canvas):
 
+def loadRobotStrategies(canvas):
     bot1 = canvas.data["bot1"]
     bot2 = canvas.data["bot2"]
     world = canvas.data["world"]
@@ -366,7 +371,7 @@ def loadRobotStrategies(canvas):
             U = runValueIteration(world, bot1, bot2)
             canvas.data["U"] = U
         # both q-learning
-        elif bot1.strategy == 'q' and bot2.strategy == 'q':# only use Q1 and Q2 for 2 q-learning bots. else it is just Q
+        elif bot1.strategy == 'q' and bot2.strategy == 'q':  # only use Q1 and Q2 for 2 q-learning bots. else it is just Q
             Q1 = QLearning(world, bot1, bot2)
             Q2 = QLearning(world, bot1, bot2)
             canvas.data["Q1"] = Q1
@@ -404,11 +409,12 @@ def loadRobotStrategies(canvas):
             Q = QLearning(world, bot1, bot2)
             canvas.data["Q"] = Q
 
-    # human versus human
-    # don't load any strategies
+            # human versus human
+            # don't load any strategies
+
 
 # ============================================================================
-#     Callbacks
+# Callbacks
 # ============================================================================
 
 def mousePressed(event):
@@ -454,9 +460,9 @@ def keyPressed(event):
         redraw(canvas)
         return
 
-    # Process keys that only work if the game is not over and it is the user's turn
-    #for bot in (bot1, bot2):
-    #    print 'starting for loop'
+        # Process keys that only work if the game is not over and it is the user's turn
+        #for bot in (bot1, bot2):
+        #    print 'starting for loop'
         # only move the bot if it is a human player and it is it's turn
 
     if bot1.botType == 'h' and bot1.isTurn():
@@ -469,13 +475,13 @@ def keyPressed(event):
     # move the user robot
     if not world.isGameOver():
         if (event.keysym == "Up"):
-            world.moveBot(userBot,'North')
+            world.moveBot(userBot, 'North')
         elif (event.keysym == "Down"):
-            world.moveBot(userBot,'South')
+            world.moveBot(userBot, 'South')
         elif (event.keysym == "Left"):
-            world.moveBot(userBot,'West')
+            world.moveBot(userBot, 'West')
         elif (event.keysym == "Right"):
-            world.moveBot(userBot,'East')
+            world.moveBot(userBot, 'East')
 
         # toggle turns
         userBot.toggleTurn()
@@ -502,7 +508,7 @@ def keyPressed(event):
             if otherBot.strategy == 'q':
                 Q = canvas.data["Q"]
                 action = Q.getAction(world, otherBot)
-                world.moveBot(otherBot,action)
+                world.moveBot(otherBot, action)
                 Q.update(world, otherBot)
 
                 # toggle turn
@@ -511,6 +517,7 @@ def keyPressed(event):
 
                 # redraw the grid
                 redraw(canvas)
+
 
 if __name__ == "__main__":
     main()

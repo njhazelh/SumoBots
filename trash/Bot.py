@@ -1,0 +1,103 @@
+# Bot
+import util
+
+
+class Bot:
+    def __init__(self, xPos, yPos, power, speed, color, canvas, turn, botType, strategy):
+        self.xPos = xPos  # int for row of bot
+        self.yPos = yPos  # int for col of bot
+        self.power = power  # int for how many spaces a bot can push another bot
+        self.speed = speed  # int for how many spaces a bot can move
+        self.color = color
+        self.turn = turn
+        self.failProb = .2
+        self.botType = botType
+        self.strategy = strategy
+
+    def get_legal_actions(self, state, world):
+        actions = []
+        sumoGrid = world.getSumoGrid()
+
+        # For now just return 1 space to the 'West', 'East', 'North', 'South'
+        if sumoGrid[state[0] + 1][state[1]] != -9:
+            actions.append('East')
+
+        if sumoGrid[state[0] - 1][state[1]] != -9:
+            actions.append('West')
+
+        if sumoGrid[state[0]][state[1] - 1] != -9:
+            actions.append('North')
+
+        if sumoGrid[state[0]][state[1] + 1] != -9:
+            actions.append('South')
+
+        return actions
+
+    def get_all_actions(self, world):
+        allActions = {}
+        for state in world.states:
+            allActions[state] = self.get_legal_actions(state, world)
+        return allActions
+
+    def get_transition_model(self, world):
+        transModel = {}
+        for state in world.states:
+            legalActions = self.get_legal_actions(state, world)
+            numActions = len(legalActions)
+            # divide the prob of failure equally among the wrong actions
+            pWrongAction = self.failProb / (numActions - 1)
+            for actionAttempt in legalActions:
+                transModel[state, actionAttempt] = {}
+                for actionOccur in legalActions:
+                    nextState = self.next_state(state, actionOccur)
+                    if actionAttempt == actionOccur:
+                        # prob of performing the correct action
+                        transModel[(state, actionAttempt)][nextState] = 1 - self.failProb
+                    else:
+                        transModel[(state, actionAttempt)][nextState] = pWrongAction
+        return transModel
+
+    @property
+    def state(self):
+        return self.xPos, self.yPos
+
+    def next_state(self, state, action):
+        xPos = state[0]
+        yPos = state[1]
+        if action == 'West':
+            xPos = state[0] - 1
+        elif action == 'East':
+            xPos = state[0] + 1
+        elif action == 'North':
+            yPos = state[1] - 1
+        elif action == 'South':
+            yPos = state[1] + 1
+
+        return xPos, yPos
+
+    def is_at(self, xPos, yPos):
+        return self.xPos == xPos and self.yPos == yPos
+
+    def isTurn(self):
+        return self.turn
+
+    def toggleTurn(self):
+        self.turn = not self.turn
+
+    def randomizeAction(self, action, world):
+        state = []
+        state.append(self.xPos)
+        state.append(self.yPos)
+
+        legalActions = self.get_legal_actions(state, world)
+        weightedActions = []
+        distributionSpread = self.failProb / (len(legalActions) - 1)
+
+        for legalAction in legalActions:
+            if legalAction == action:
+                weightedActions.append((1 - self.failProb, legalAction))
+            else:
+                weightedActions.append((distributionSpread, legalAction))
+
+        return util.chooseFromDistribution(weightedActions)
+

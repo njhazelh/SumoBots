@@ -8,6 +8,7 @@ HUMAN = 0
 Q_LEARNING = 1
 VALUE_ITERATION = 2
 
+
 def enum_to_strategy(robot, other_bot, world, type):
     """
     Convert one of the values above into a strategy object.

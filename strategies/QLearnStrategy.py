@@ -3,10 +3,11 @@ from qLearning import QLearning
 
 __author__ = 'Nick'
 
+
 class QLearnStrategy(Strategy):
     def __init__(self, robot, otherbot, world):
         self.robot = robot
-        self.otherbot=otherbot
+        self.otherbot = otherbot
         self.world = world
         self.Q = QLearning(world, robot, otherbot)
 

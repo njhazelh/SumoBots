@@ -1,11 +1,12 @@
 from Tkinter import *
-from scenes import SCENES
 
+from scenes import SCENES
 from scenes.Scene import Scene
 from strategies import STRATEGIES
 
 
 __author__ = 'Nick'
+
 
 class RobotConfigScene(Scene):
     def prepare(self, kwargs):
@@ -17,7 +18,6 @@ class RobotConfigScene(Scene):
             self.config = {}
         else:
             self.config = kwargs['config']
-        print(self.config)
 
         self.canvas = Canvas(self.master, bg="white", width=self.width, height=self.height)
         self.canvas.pack()

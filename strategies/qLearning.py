@@ -1,6 +1,9 @@
-import util
 import random
+
 from MDP import MDP
+
+import util
+
 
 class QLearning:
     """
@@ -138,7 +141,7 @@ class QLearning:
         reward = self.mdp.rewards[qState]
 
         oldQVal = self.getQValue(qState)
-        #maxVal = self.computeValueFromQValues(qState, world, robot)
-        newValue = (1-alpha) * oldQVal + alpha*(reward + gamma*oldQVal)
+        # maxVal = self.computeValueFromQValues(qState, world, robot)
+        newValue = (1 - alpha) * oldQVal + alpha * (reward + gamma * oldQVal)
 
         self.values[qState] = newValue

@@ -1,7 +1,7 @@
 from Tkinter import *
 
 from Bot import Bot
-from World import World
+from trash import World
 
 
 class SumoArena:

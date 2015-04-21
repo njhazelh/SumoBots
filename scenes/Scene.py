@@ -2,6 +2,7 @@ __author__ = 'Nick'
 
 from Tkinter import *
 
+
 class Scene(Frame):
     """
     A Scene represents a single unit page in a GUI.
@@ -9,6 +10,7 @@ class Scene(Frame):
     Which scene is shown in the GUI is controlled by the application Frame.
     Scenes can access this Frame through 'self.master' to request scene changes.
     """
+
     def __init__(self, master, **kwargs):
         """
         Handle initialization of the Scene with the master.

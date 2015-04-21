@@ -27,6 +27,7 @@ def key_to_action(event):
     else:
         raise Exception("Event does not map to action: %s" % (event.keysym))
 
+
 class HumanStrategy(Strategy):
     """
     HumanStrategy is the strategy where a human controls the robot via key
@@ -41,6 +42,7 @@ class HumanStrategy(Strategy):
     If there isn't a key-event that maps to an action, then we return None.
     This gets used by the rest of the application to avoid advancing the player turn.
     """
+
     def __init__(self, world):
         """
         Initialize the strategy

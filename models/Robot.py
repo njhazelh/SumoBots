@@ -1,6 +1,6 @@
 from strategies import ACTIONS
 from strategies import STRATEGIES
-import util
+from strategies import util
 
 __author__ = 'Nick'
 
@@ -94,7 +94,7 @@ class Robot:
         # if x - 1 >= 0:
         # actions.append(ACTIONS.MOVE_WEST)
         # if y + 1 < world.rows:
-        #     actions.append(ACTIONS.MOVE_NORTH)
+        # actions.append(ACTIONS.MOVE_NORTH)
         # if y - 1 >= 0:
         #     actions.append(ACTIONS.MOVE_SOUTH)
 

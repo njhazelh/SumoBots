@@ -5,6 +5,7 @@ __author__ = 'Nick'
 
 from Tkinter import *
 
+
 class TitleScene(Scene):
     def prepare(self, kwargs):
         self.width = 600
