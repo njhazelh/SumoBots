@@ -13,7 +13,7 @@ class Bot:
         self.botType = botType
         self.strategy = strategy
 
-    def getLegalActions(self, state, world):
+    def get_legal_actions(self, state, world):
         actions = []
         sumoGrid = world.getSumoGrid()
 
@@ -34,21 +34,21 @@ class Bot:
 
     def get_all_actions(self, world):
         allActions = {}
-        for state in world.get_states():
-            allActions[state] = self.getLegalActions(state, world)
+        for state in world.states:
+            allActions[state] = self.get_legal_actions(state, world)
         return allActions
 
     def get_transition_model(self, world):
         transModel = {}
-        for state in world.get_states():
-            legalActions = self.getLegalActions(state, world)
+        for state in world.states:
+            legalActions = self.get_legal_actions(state, world)
             numActions = len(legalActions)
             # divide the prob of failure equally among the wrong actions
             pWrongAction = self.failProb / (numActions - 1)
             for actionAttempt in legalActions:
                 transModel[state, actionAttempt] = {}
                 for actionOccur in legalActions:
-                    nextState = self.nextState(state, actionOccur)
+                    nextState = self.next_state(state, actionOccur)
                     if actionAttempt == actionOccur:
                         # prob of performing the correct action
                         transModel[(state, actionAttempt)][nextState] = 1 - self.failProb
@@ -56,10 +56,11 @@ class Bot:
                         transModel[(state, actionAttempt)][nextState] = pWrongAction
         return transModel
 
+    @property
     def state(self):
-        return (self.xPos, self.yPos)
+        return self.xPos, self.yPos
 
-    def nextState(self, state, action):
+    def next_state(self, state, action):
         xPos = state[0]
         yPos = state[1]
         if action == 'West':
@@ -73,7 +74,7 @@ class Bot:
 
         return xPos, yPos
 
-    def isAt(self, xPos, yPos):
+    def is_at(self, xPos, yPos):
         return self.xPos == xPos and self.yPos == yPos
 
     def isTurn(self):
@@ -87,7 +88,7 @@ class Bot:
         state.append(self.xPos)
         state.append(self.yPos)
 
-        legalActions = self.getLegalActions(state, world)
+        legalActions = self.get_legal_actions(state, world)
         weightedActions = []
         distributionSpread = self.failProb / (len(legalActions) - 1)
 

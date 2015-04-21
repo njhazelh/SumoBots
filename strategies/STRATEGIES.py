@@ -19,7 +19,7 @@ def enum_to_strategy(robot, other_bot, world, type):
     if type == HUMAN:
         return HumanStrategy(world)
     elif type == Q_LEARNING:
-        return QLearnStrategy()
+        return QLearnStrategy(robot, other_bot, world)
     elif type == VALUE_ITERATION:
         return ValueIterStrategy(robot, other_bot, world)
     else:

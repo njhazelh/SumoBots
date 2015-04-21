@@ -1,3 +1,4 @@
+import ACTIONS
 from models.Robot import Robot
 import WORLD_STATES
 from strategies import STRATEGIES
@@ -137,3 +138,62 @@ class World:
         :param event: The event that just happened
         """
         self.key_event = event
+
+    def pushable(self, action):
+        drow = 0
+        dcol = 0
+        if action == ACTIONS.MOVE_NORTH:
+            drow = -1
+        elif action == ACTIONS.MOVE_SOUTH:
+            drow = 1
+        elif action == ACTIONS.MOVE_EAST:
+            dcol = 1
+        elif action == ACTIONS.MOVE_WEST:
+            dcol = -1
+
+        if self.current_player == 1:
+            pushing_bot = self.bot1
+            pushed_bot = self.bot2
+        else:
+            pushing_bot = self.bot2
+            pushed_bot = self.bot1
+
+        nextY = pushing_bot.y + drow
+        nextX = pushing_bot.x + dcol
+        return pushed_bot.is_at(nextX, nextY)
+
+    def can_push_toward_edge(self, action):
+        """
+        Can this bot be pushed closer to the boundary?
+        :param action:
+        :return:
+        """
+        drow = 0
+        dcol = 0
+        if action == ACTIONS.MOVE_NORTH:
+            drow = -1
+        elif action == ACTIONS.MOVE_SOUTH:
+            drow = 1
+        elif action == ACTIONS.MOVE_EAST:
+            dcol = 1
+        elif action == ACTIONS.MOVE_WEST:
+            dcol = -1
+
+        centerX = (self.cols - 1) / 2.0
+        centerY = (self.rows - 1) / 2.0
+
+        if self.pushable(action):
+            pushed_bot = self.bot2 if self.current_player == 1 else self.bot1
+            nextBotX = pushed_bot.x + dcol
+            nextBotY = pushed_bot.y + drow
+
+            if action == ACTIONS.MOVE_NORTH:
+                return nextBotY < centerY
+            elif action == ACTIONS.MOVE_SOUTH:
+                return nextBotY > centerY
+            elif action == ACTIONS.MOVE_EAST:
+                return nextBotX < centerX
+            elif action == ACTIONS.MOVE_WEST:
+                return nextBotX > centerX
+        else:
+            return False

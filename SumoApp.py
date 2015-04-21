@@ -1,11 +1,14 @@
+#!/usr/bin/python
+
 from scenes import SCENES
-from scenes.ArenaScene import  ArenaScene
+from scenes.ArenaScene import ArenaScene
 from scenes.RobotConfigScene import RobotConfigScene
 from scenes.TitleScene import TitleScene
 
 __author__ = 'Nick'
 
 from Tkinter import *
+
 
 class SumoApp(Frame):
     def __init__(self, master):
@@ -30,12 +33,14 @@ class SumoApp(Frame):
         else:
             self.scene = None
 
+
 def main():
     root = Tk()
     root.title("Robot-Sumo [by Team Wall-E]")
     root.resizable(width=0, height=0)
     app = SumoApp(master=root)
     app.mainloop()
+
 
 if __name__ == "__main__":
     main()

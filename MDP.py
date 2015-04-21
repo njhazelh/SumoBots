@@ -1,4 +1,6 @@
 import util
+
+
 class MDP:
     """
     This class represents the Markov Decision Process in the sumoBots world.
@@ -22,8 +24,8 @@ class MDP:
         beginning of the tuple in the MDP state is which robot's turn it is
         """
 
-        robot1states = self.world.get_states()
-        robot2states = self.world.get_states()
+        robot1states = self.world.states
+        robot2states = self.world.states
 
         mdp_states = []
 
@@ -69,7 +71,7 @@ class MDP:
 
         for mdpState in self.states:
             if self.is_rob1(mdpState):
-                actions = robot1actions[mdpState[1]]    # possible actions robot 1 can take from its current state
+                actions = robot1actions[mdpState[1]]  # possible actions robot 1 can take from its current state
                 for action in actions:
                     newStateDist = robot1_transModel[(mdpState[1], action)]
                     currTransModel = {}
@@ -126,7 +128,7 @@ class MDP:
             rob2DCenter = ((rob2ColPos - cx) ** 2 + (rob2RowPos - cy) ** 2) ** 0.5
 
             if self.is_rob1(mdpState):
-                #Check to see whether the robot is on the edge of the boundary
+                # Check to see whether the robot is on the edge of the boundary
                 if round(rob1DCenter) == world.ring_radius and round(rob2DCenter) <= world.ring_radius:
                     mdpRewards[mdpState] -= 10
                     #If robot is on boundary and next to the opponent

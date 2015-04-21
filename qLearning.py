@@ -16,7 +16,7 @@ class QLearning:
         Q(s,a) = (1-alpha)Q(s,a) + (alpha)R(s,a,s') + gamma*max(f(Q(s',a'), N(s',a')))
             N(s',a') is the count n of the number of times this state is visited
 
-    *** states for Q learning are the same as MDP state, eg. (1, (15,15), (18,19)) or 
+    *** states for Q learning are the same as MDP state, eg. (1, (15,15), (18,19)) or
     (the number of the robot whose turn it is, rob1 state, rob2 state)
     """
 
@@ -35,29 +35,26 @@ class QLearning:
         """
         Compute the best action to take given the state based on Q values
         """
-
+        qState = None
         if robot == world.bot1:
             turn = 1
-            nextTurn = 2
-            qState = (1, world.bot1.state(), world.bot2.state())
-            nextOppBotState = world.bot2.state()
+            qState = (1, world.bot1.state, world.bot2.state)
+            nextOppBotState = world.bot2.state
         elif robot == world.bot2:
             turn = 2
-            nextTurn = 1
-            qState = (2, world.bot1.state(), world.bot2.state())
-            nextOppBotState = world.bot1.state()
+            qState = (2, world.bot1.state, world.bot2.state)
+            nextOppBotState = world.bot1.state
 
-        actions = robot.getLegalActions(robot.state(), world)
+        actions = robot.get_legal_actions(robot.state, world)
 
-        if world.isGameOver():
+        if world.game_over:
             return None
 
         bestValue = self.getQValue(qState)
         bestAction = actions[0]
 
         for action in actions:
-
-            nextBotstate = robot.nextState(robot.state(), action)
+            nextBotstate = robot.next_state(action, robot.state)
             if turn == 1:
                 nextQstate = (2, nextBotstate, nextOppBotState)
             elif turn == 2:
@@ -78,23 +75,21 @@ class QLearning:
 
         if robot == world.bot1:
             turn = 1
-            nextTurn = 2
-            nextOppBotState = world.bot2.state()
+            nextOppBotState = world.bot2.state
         elif robot == world.bot2:
             turn = 2
-            nextTurn = 1
-            nextOppBotState = world.bot1.state()
+            nextOppBotState = world.bot1.state
 
-        actions = robot.getLegalActions(robot.state(), world)
+        actions = robot.get_legal_actions(robot.state, world)
 
-        if world.isGameOver():
+        if world.game_over:
             return 0.0
 
         bestValue = self.getQValue(qState)
 
         for action in actions:
 
-            nextBotstate = robot.nextState(robot.state(), action)
+            nextBotstate = robot.next_state(action, robot.state)
             if turn == 1:
                 nextQstate = (2, nextBotstate, nextOppBotState)
             elif turn == 2:
@@ -110,13 +105,12 @@ class QLearning:
         Compute action to take from state. epsilon is the probability of taking a random action.
         """
         epsilon = world.epsilon
-        state = robot.state()
-        legalActions = robot.getLegalActions(state, world)
-        action = None
+        state = robot.state
+        legalActions = robot.get_legal_actions(state, world)
 
         randomChoice = util.flipCoin(epsilon)
 
-        if world.isGameOver():
+        if world.game_over:
             return None
 
         if randomChoice:
@@ -132,9 +126,10 @@ class QLearning:
         """
         alpha = world.alpha
         gamma = world.gamma
-        bot1state = world.bot1.state()
-        bot2state = world.bot2.state()
+        bot1state = world.bot1.state
+        bot2state = world.bot2.state
 
+        qState = None
         if robot == world.bot1:
             qState = (1, bot1state, bot2state)
         elif robot == world.bot2:
@@ -143,7 +138,7 @@ class QLearning:
         reward = self.mdp.rewards[qState]
 
         oldQVal = self.getQValue(qState)
-        maxVal = self.computeValueFromQValues(qState, world, robot)
+        #maxVal = self.computeValueFromQValues(qState, world, robot)
         newValue = (1-alpha) * oldQVal + alpha*(reward + gamma*oldQVal)
 
         self.values[qState] = newValue

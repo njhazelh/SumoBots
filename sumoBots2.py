@@ -305,10 +305,10 @@ def drawSumoCell(canvas, sumoGrid, row, col):
         canvas.create_text(left + cellSize / 2, top + cellSize / 2,
                            text=str(sumoGrid[row][col]), font=("Helvetica", 14, "bold"))
 
-    if (bot1.isAt(col, row)):
+    if (bot1.is_at(col, row)):
         # Draw the Bot
         canvas.create_rectangle(left, top, right, bottom, fill=bot1.color)
-    elif (bot2.isAt(col, row)):
+    elif (bot2.is_at(col, row)):
         # Draw the Enemy Bot
         canvas.create_rectangle(left, top, right, bottom, fill=bot2.color)
 

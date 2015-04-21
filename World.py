@@ -6,7 +6,7 @@ class World:
     """
 
     def __init__(self, rows, cols, bot1, bot2):
-        self.gameOver = False
+        self.game_over = False
         self.debug = False
         self.bot1 = bot1
         self.bot2 = bot2
@@ -54,9 +54,6 @@ class World:
     def getSumoGrid(self):
         return self.sumoGrid
 
-    def get_states(self):
-        return self.states
-
     def getNumRows(self):
         return self.rows
 
@@ -70,11 +67,11 @@ class World:
         return self.bot2
 
     def setGameOver(self, value):
-        self.gameOver = value
-        return self.gameOver
+        self.game_over = value
+        return self.game_over
 
     def isGameOver(self):
-        return self.gameOver
+        return self.game_over
 
     def toggleDebug(self):
         self.debug = not (self.debug)
@@ -86,30 +83,27 @@ class World:
     def pushable(self, action):
         drow = 0
         dcol = 0
-        if action == 'North':
+        if action == "North":
             drow = -1
-        elif action == 'South':
+        elif action == "South":
             drow = 1
-        elif action == 'East':
+        elif action == "East":
             dcol = 1
-        elif action == 'West':
+        elif action == "West":
             dcol = -1
 
         if self.bot1.isTurn():
-            nextY = self.bot1.yPos + drow
-            nextX = self.bot1.xPos + dcol
-
-            if nextY == self.bot2.yPos and nextX == self.bot2.xPos:
-                return True
+            pushing_bot = self.bot1
+            pushed_bot = self.bot2
         else:
-            nextY = self.bot2.yPos + drow
-            nextX = self.bot2.xPos + dcol
-            if nextY == self.bot1.yPos and nextX == self.bot1.xPos:
-                return True
+            pushing_bot = self.bot2
+            pushed_bot = self.bot1
 
-        return False
+        nextY = pushing_bot.yPos + drow
+        nextX = pushing_bot.xPos + dcol
+        return pushed_bot.is_at(nextX, nextY)
 
-    def canPushCloserToBoundary(self, action):
+    def can_push_toward_edge(self, action):
         """
         Can this bot be pushed closer to the boundary?
         :param action:
@@ -126,46 +120,32 @@ class World:
         elif action == 'West':
             dcol = -1
 
-        currentBot2X = self.bot2.xPos
-        currentBot2Y = self.bot2.yPos
-        currentBot1X = self.bot1.xPos
-        currentBot1Y = self.bot1.yPos
-
         centerX = (self.cols - 1) / 2.0
         centerY = (self.rows - 1) / 2.0
 
         if self.pushable(action):
-            if self.bot1.isTurn():
-                nextBot2X = currentBot2X + dcol
-                nextBot2Y = currentBot2Y + drow
-                if action == 'North':
-                    return nextBot2Y < centerY
-                elif action == 'South':
-                    return nextBot2Y > centerY
-                elif action == 'East':
-                    return nextBot2X < centerX
-                elif action == 'West':
-                    return nextBot2X > centerX
-            else:
-                nextBot1X = currentBot1X + dcol
-                nextBot1Y = currentBot1Y + drow
+            pushed_bot = self.bot2 if self.bot1.isTurn() else self.bot1
+            nextBotX = pushed_bot.xPos + dcol
+            nextBotY = pushed_bot.yPos + drow
 
-                if action == 'North':
-                    return nextBot1Y < centerY
-                elif action == 'South':
-                    return nextBot1Y > centerY
-                elif action == 'East':
-                    return nextBot1X < centerX
-                elif action == 'West':
-                    return nextBot1X > centerX
-        return False
+            if action == 'North':
+                return nextBotY < centerY
+            elif action == 'South':
+                return nextBotY > centerY
+            elif action == 'East':
+                return nextBotX < centerX
+            elif action == 'West':
+                return nextBotX > centerX
+        else:
+            return False
 
     def performBestAction(self, compBot, U):
         """
         Choose and perform the best action.
         :param U: (turn, bot1, bot2) are U key values
         """
-
+        otherBot = None
+        turn = 0
         for bot in (self.bot1,self.bot2):
             if bot != compBot:
                 otherBot = bot
@@ -179,8 +159,8 @@ class World:
 
         maxUtil = 0
         bestAction = None
-        for action in compBot.getLegalActions(compBotState, self):
-            nextState = compBot.nextState(compBotState, action)
+        for action in compBot.get_legal_actions(compBotState, self):
+            nextState = compBot.next_state(compBotState, action)
             nextUtil = U[turn, nextState, otherBotState]
             if nextUtil > maxUtil:
                 maxUtil = nextUtil
@@ -201,6 +181,7 @@ class World:
         #    action = self.bot1.randomizeAction(action,self)
         #else:
         #    action = self.bot2.randomizeAction(action,self)
+        otherBot = None
         for bot in (self.bot1, self.bot2):
             if bot != turnBot:
                 otherBot = bot

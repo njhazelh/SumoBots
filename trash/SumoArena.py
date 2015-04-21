@@ -84,10 +84,10 @@ class SumoArena:
         bot1 = self.world.getBot1()
         bot2 = self.world.getBot2()
 
-        if (bot1.isAt(col, row)):
+        if (bot1.is_at(col, row)):
             # Draw the Bot
             self.sumoArena.canvas.create_rectangle(left, top, right, bottom, fill=bot1.color)
-        elif (bot2.isAt(col, row)):
+        elif (bot2.is_at(col, row)):
             # Draw the Enemy Bot
             self.sumoArena.canvas.create_rectangle(left, top, right, bottom, fill=bot2.color)
 
