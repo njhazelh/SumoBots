@@ -1,4 +1,4 @@
-import ACTIONS
+from strategies import ACTIONS
 from strategies import STRATEGIES
 import util
 

@@ -1,5 +1,5 @@
 from Tkconstants import ALL
-import WORLD_STATES
+from models import WORLD_STATES
 
 __author__ = 'Nick'
 

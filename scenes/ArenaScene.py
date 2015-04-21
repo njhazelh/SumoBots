@@ -3,7 +3,7 @@ from datetime import datetime
 
 import SCENES
 
-from scenes.Scene import Scene
+from Scene import Scene
 from models.World import World
 from views.WorldView import WorldView
 
