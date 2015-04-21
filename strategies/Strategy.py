@@ -11,3 +11,9 @@ class Strategy(object):
         :return: The action chosen.
         """
         raise NotImplementedError()
+
+    def update(self):
+        """
+        Update the strategy after a move.  Intended for learning algorithms.
+        """
+        pass

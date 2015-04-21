@@ -10,38 +10,38 @@ class MDP:
         self.world = world
         self.robot1 = robot1
         self.robot2 = robot2
-        self.states = self.getStates()
-        self.actions = self.getActions()
-        self.transModel = self.getTransModel()
-        self.rewards = self.getNewRewardModel(world)
+        self.states = self.get_states()
+        self.actions = self.get_actions()
+        self.transModel = self.get_trans_model()
+        self.rewards = self.get_new_reward_model(world)
 
-    def getStates(self):
+    def get_states(self):
         """
         The MDP state space is all possible board configurations. This is all possible
         arrangements of both robots, as well as whose turn it is. The number at the
         beginning of the tuple in the MDP state is which robot's turn it is
         """
 
-        robot1states = self.world.getStates()
-        robot2states = self.world.getStates()
+        robot1states = self.world.get_states()
+        robot2states = self.world.get_states()
 
-        mdpStates = []
+        mdp_states = []
 
         for turn in [1, 2]:
             for state1 in robot1states:
                 for state2 in robot2states:
-                    mdpStates.append((turn, state1, state2))
+                    mdp_states.append((turn, state1, state2))
 
-        return mdpStates
+        return mdp_states
 
-    def getActions(self):
+    def get_actions(self):
         """
         The MDP actions are stored in a dictionary. The key is the state and the value is a
         list of possible actions which can be taken from that state.
         """
 
-        robot1actions = self.robot1.getAllActions(self.world)
-        robot2actions = self.robot2.getAllActions(self.world)
+        robot1actions = self.robot1.get_all_actions(self.world)
+        robot2actions = self.robot2.get_all_actions(self.world)
 
         mdpActions = {}
 
@@ -53,17 +53,17 @@ class MDP:
 
         return mdpActions
 
-    def getTransModel(self):
+    def get_trans_model(self):
         """
         The MDP transition model is a dictionary where a key is a (state, action) tuple, and
         the value is another dictionary. In this dictionary, a key is a possible nextState,
         and the value is the probability of a robot transitioning from state to nextState.
         """
-        robot1actions = self.robot1.getAllActions(self.world)
-        robot2actions = self.robot2.getAllActions(self.world)
+        robot1actions = self.robot1.get_all_actions(self.world)
+        robot2actions = self.robot2.get_all_actions(self.world)
 
-        robot1_transModel = self.robot1.getTransitionModel(self.world)
-        robot2_transModel = self.robot2.getTransitionModel(self.world)
+        robot1_transModel = self.robot1.get_transition_model(self.world)
+        robot2_transModel = self.robot2.get_transition_model(self.world)
 
         mdp_transModel = {}
 
@@ -87,7 +87,7 @@ class MDP:
 
         return mdp_transModel
 
-    def getRewardModel(self):
+    def get_reward_model(self):
         """
         We are using a simplified reward system to start with
         """
@@ -100,15 +100,15 @@ class MDP:
             else:
                 mdpRewards[mdpState] = 15 - dist
         return mdpRewards
-    
-    def getNewRewardModel(self, world):
+
+    def get_new_reward_model(self, world):
         """
-        Using this function, rewards are based on robot's position according to how close it is to 
+        Using this function, rewards are based on robot's position according to how close it is to
         the boundary, as well as if the robot is between the other robot, and the closest boundary.
         """
         mdpRewards = {}
-        rows = world.getNumRows()
-        cols = world.getNumCols()
+        rows = world.rows
+        cols = world.cols
         cx = (cols - 1) / 2.0
         cy = (rows - 1) / 2.0
         for mdpState in self.states:
@@ -119,12 +119,12 @@ class MDP:
             rob1RowPos = rob1Pos[0]
             rob1ColPos = rob1Pos[1]
             rob1DCenter = ((rob1ColPos - cx) ** 2 + (rob1RowPos - cy) ** 2) ** 0.5
-            
+
             rob2Pos = mdpState[2]
             rob2RowPos = rob2Pos[0]
             rob2ColPos = rob2Pos[1]
             rob2DCenter = ((rob2ColPos - cx) ** 2 + (rob2RowPos - cy) ** 2) ** 0.5
-            
+
             if self.is_rob1(mdpState):
                 #Check to see whether the robot is on the edge of the boundary
                 if round(rob1DCenter) == world.ring_radius and round(rob2DCenter) <= world.ring_radius:
@@ -137,10 +137,8 @@ class MDP:
                     mdpRewards[mdpState] -= 10
                     if dist == 1:
                         mdpRewards[mdpState] -= 10
-    
+
         return mdpRewards
-            
-    
 
     # returns true if it is robot 1's turn
     def is_rob1(self, mdpState):

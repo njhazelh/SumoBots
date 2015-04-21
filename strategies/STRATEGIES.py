@@ -8,7 +8,7 @@ HUMAN = 0
 Q_LEARNING = 1
 VALUE_ITERATION = 2
 
-def enum_to_strategy(robot, world, type):
+def enum_to_strategy(robot, other_bot, world, type):
     """
     Convert one of the values above into a strategy object.
     :param robot: The robot that this strategy applies to.
@@ -21,7 +21,7 @@ def enum_to_strategy(robot, world, type):
     elif type == Q_LEARNING:
         return QLearnStrategy()
     elif type == VALUE_ITERATION:
-        return ValueIterStrategy()
+        return ValueIterStrategy(robot, other_bot, world)
     else:
         raise Exception("Strategy not recognized: %s" % (type))
 

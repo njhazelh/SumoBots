@@ -16,7 +16,7 @@ class Robot:
     to its Strategy, and can be pushed by other robots if they collide.
     """
 
-    def __init__(self, x, y, world, color, type):
+    def __init__(self, x, y, id, world, color, type):
         """
         Initialize the robot state.
         :param x: The column of the robot
@@ -25,7 +25,7 @@ class Robot:
         :param color: The color of the robot
         :param type: The strategy type of the robot.
         """
-        self.strategy = STRATEGIES.enum_to_strategy(self, world, type)
+        self.id = id
         self.type = type
         self.world = world
         self.x = x
@@ -33,6 +33,12 @@ class Robot:
         self.color = color
         self.fail_prob = 0.1
         self.last_action = None
+
+    def set_enemy(self, enemy):
+        self.enemy = enemy
+
+    def load_strategy(self):
+        self.strategy = STRATEGIES.enum_to_strategy(self, self.enemy, self.world, self.type)
 
     def update(self):
         """
@@ -48,31 +54,66 @@ class Robot:
             self.last_action = action
             return True
 
-    def get_legal_actions(self):
+    def update_strategy(self):
+        """
+        Update the strategy after a move completed.
+        """
+        self.strategy.update()
+
+    def get_legal_actions(self, state=None, world=None):
         """
         :return: The actions that will not end the game for this robot.
         """
-        # actions = []
-        # x = self.x
-        # y = self.y
-        # grid = self.world.sumo_grid
+        actions = []
+        x = self.x
+        y = self.y
+        grid = self.world.sumo_grid
 
-        # For now just return 1 space to the 'West', 'East', 'North', 'South'
-        # if grid[x + 1][y] != -9:
-        #     actions.append(ACTIONS.MOVE_EAST)
-        #
-        # if grid[x - 1][y] != -9:
-        #     actions.append(ACTIONS.MOVE_WEST)
-        #
-        # if grid[x][y - 1] != -9:
-        #     actions.append(ACTIONS.MOVE_NORTH)
-        #
-        # if grid[x][y + 1] != -9:
-        #     actions.append(ACTIONS.MOVE_SOUTH)
+        #For now just return 1 space to the 'West', 'East', 'North', 'South'
+        if grid[x + 1][y] != -9:
+            actions.append(ACTIONS.MOVE_EAST)
 
+        if grid[x - 1][y] != -9:
+            actions.append(ACTIONS.MOVE_WEST)
+
+        if grid[x][y - 1] != -9:
+            actions.append(ACTIONS.MOVE_NORTH)
+
+        if grid[x][y + 1] != -9:
+            actions.append(ACTIONS.MOVE_SOUTH)
+
+        #actions = [ACTIONS.MOVE_EAST, ACTIONS.MOVE_SOUTH, ACTIONS.MOVE_NORTH, ACTIONS.MOVE_WEST]
         # I think the robot should be able to kill itself.  This will also
         # show that we've taught the robot not to kill itself.
-        return [ACTIONS.MOVE_EAST, ACTIONS.MOVE_SOUTH, ACTIONS.MOVE_NORTH, ACTIONS.MOVE_WEST]
+        return actions
+
+    def get_transition_model(self, world=None):
+        trans_model = {}
+
+        if world is None:
+            world = self.world
+
+        for state in world.get_states():
+            legal_actions = self.get_legal_actions(state, world)
+            num_actions = len(legal_actions)
+            # divide the prob of failure equally among the wrong actions
+            p_wrong_action = self.fail_prob / (num_actions - 1)
+            for action_attempt in legal_actions:
+                trans_model[state, action_attempt] = {}
+                for action_occur in legal_actions:
+                    next_state = self.next_state(action_occur, state)
+                    if action_attempt == action_occur:
+                        # prob of performing the correct action
+                        trans_model[(state, action_attempt)][next_state] = 1 - self.fail_prob
+                    else:
+                        trans_model[(state, action_attempt)][next_state] = p_wrong_action
+        return trans_model
+
+    def get_all_actions(self, world):
+        allActions = {}
+        for state in self.world.get_states():
+            allActions[state] = self.get_legal_actions()
+        return allActions
 
     def add_action_noise(self, action):
         """
@@ -93,6 +134,36 @@ class Robot:
         new_action = util.chooseFromDistribution(weighted_actions)
         print new_action
         return new_action
+
+    def next_state(self, action, state=None):
+        """
+        Get the state that an action would put the robot in without mutating the
+        actual robot state
+        :param action: The action the robot would perform
+        :return: The state the action would put the robot in.
+        """
+        if state is None:
+            state = self.state
+
+        x, y = state
+
+        if action == ACTIONS.MOVE_NORTH:
+            y -= 1
+        elif action == ACTIONS.MOVE_SOUTH:
+            y += 1
+        elif action == ACTIONS.MOVE_WEST:
+            x -= 1
+        elif action == ACTIONS.MOVE_EAST:
+            x += 1
+
+        return x, y
+
+    @property
+    def state(self):
+        """
+        :return: The current state of the robot.
+        """
+        return self.x, self.y
 
     def apply_action(self, action):
         """

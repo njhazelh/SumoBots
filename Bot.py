@@ -32,15 +32,15 @@ class Bot:
 
         return actions
 
-    def getAllActions(self, world):
+    def get_all_actions(self, world):
         allActions = {}
-        for state in world.getStates():
+        for state in world.get_states():
             allActions[state] = self.getLegalActions(state, world)
         return allActions
 
-    def getTransitionModel(self, world):
+    def get_transition_model(self, world):
         transModel = {}
-        for state in world.getStates():
+        for state in world.get_states():
             legalActions = self.getLegalActions(state, world)
             numActions = len(legalActions)
             # divide the prob of failure equally among the wrong actions

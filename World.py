@@ -54,7 +54,7 @@ class World:
     def getSumoGrid(self):
         return self.sumoGrid
 
-    def getStates(self):
+    def get_states(self):
         return self.states
 
     def getNumRows(self):

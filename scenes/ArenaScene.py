@@ -49,7 +49,7 @@ class ArenaScene(Scene):
         The update may not complete due to other
         """
         if self.resetting:
-            # Make sure that no old after calls run while resetting.
+            # Make sure that no old "after" calls run while resetting.
             return
 
         if self.turn_start is None:
@@ -61,8 +61,8 @@ class ArenaScene(Scene):
         if update_successful:
             # If turn took longer than 1 second, repeat immediately.
             # Else, repeat after 1 second has passed since the start of the turn.
-            now = datetime.now()
-            dt = now - self.turn_start
+            turn_finish = datetime.now()
+            dt = turn_finish - self.turn_start
             self.turn_start = None
             dt_ms = int(dt.total_seconds() * 1000)
             after_ms = max(0, 1000 - dt_ms)
