@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import argparse
 from Tkinter import Tk
 from scenes.SumoApp import SumoApp
 
@@ -16,4 +17,6 @@ def main():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="SumoBot Arena")
+    # parser.add_argument()
     main()
