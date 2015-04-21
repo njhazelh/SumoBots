@@ -31,7 +31,7 @@ class Robot:
         self.x = x
         self.y = y
         self.color = color
-        self.fail_prob = 0.1
+        self.fail_prob = 0.2
         self.last_action = None
 
     def set_enemy(self, enemy):
@@ -40,7 +40,7 @@ class Robot:
     def load_strategy(self):
         self.strategy = STRATEGIES.enum_to_strategy(self, self.enemy, self.world, self.type)
 
-    def update(self):
+    def act(self):
         """
         Act according the robot's strategy.
         :return: True if the update was completed, else False.
@@ -64,12 +64,15 @@ class Robot:
         """
         :return: The actions that will not end the game for this robot.
         """
-        actions = []
-        x = self.x
-        y = self.y
-        grid = self.world.sumo_grid
 
-        #For now just return 1 space to the 'West', 'East', 'North', 'South'
+        if state is None: state = self.state
+        if world is None: world = self.world
+
+        actions = []
+        x, y = state
+        grid = world.sumo_grid
+
+        # For now just return 1 space to the 'West', 'East', 'North', 'South'
         if grid[x + 1][y] != -9:
             actions.append(ACTIONS.MOVE_EAST)
 
@@ -82,18 +85,26 @@ class Robot:
         if grid[x][y + 1] != -9:
             actions.append(ACTIONS.MOVE_SOUTH)
 
-        #actions = [ACTIONS.MOVE_EAST, ACTIONS.MOVE_SOUTH, ACTIONS.MOVE_NORTH, ACTIONS.MOVE_WEST]
         # I think the robot should be able to kill itself.  This will also
         # show that we've taught the robot not to kill itself.
+        # Adding this change would also mean that we have to add all states
+        # to the world in world.init_grid.
+        # if x + 1 < world.cols:
+        # actions.append(ACTIONS.MOVE_EAST)
+        # if x - 1 >= 0:
+        # actions.append(ACTIONS.MOVE_WEST)
+        # if y + 1 < world.rows:
+        #     actions.append(ACTIONS.MOVE_NORTH)
+        # if y - 1 >= 0:
+        #     actions.append(ACTIONS.MOVE_SOUTH)
+
         return actions
 
     def get_transition_model(self, world=None):
         trans_model = {}
-
         if world is None:
             world = self.world
-
-        for state in world.get_states():
+        for state in world.states:
             legal_actions = self.get_legal_actions(state, world)
             num_actions = len(legal_actions)
             # divide the prob of failure equally among the wrong actions
@@ -109,10 +120,13 @@ class Robot:
                         trans_model[(state, action_attempt)][next_state] = p_wrong_action
         return trans_model
 
-    def get_all_actions(self, world):
+    def get_all_actions(self, world=None):
+
+        if world is None: world = self.world
+
         allActions = {}
-        for state in self.world.get_states():
-            allActions[state] = self.get_legal_actions()
+        for state in world.states:
+            allActions[state] = self.get_legal_actions(state, world)
         return allActions
 
     def add_action_noise(self, action):
@@ -130,9 +144,7 @@ class Robot:
                 weighted_actions.append(((1 - self.fail_prob), legal_action))
             else:
                 weighted_actions.append((distribution_spread, legal_action))
-        print weighted_actions
         new_action = util.chooseFromDistribution(weighted_actions)
-        print new_action
         return new_action
 
     def next_state(self, action, state=None):

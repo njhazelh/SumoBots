@@ -33,8 +33,12 @@ class World:
         self.alpha = 0.5
         self.epsilon = 0.5
 
-        self.bot1 = Robot(self.cols / 2 - 3, self.rows / 2, 1, self, "#a00", type=config[1])
-        self.bot2 = Robot(self.cols / 2 + 3, self.rows / 2, 2, self, "#0a0", type=config[2])
+        self.init_grid()
+
+        self.bot1 = Robot(x=self.cols / 2 - 3, y=self.rows / 2,
+                          id=1, world=self, color="#a00", type=config[1])
+        self.bot2 = Robot(x=self.cols / 2 + 3, y=self.rows / 2,
+                          id=2, world=self, color="#0a0", type=config[2])
         self.bot1.set_enemy(self.bot2)
         self.bot2.set_enemy(self.bot1)
         self.bot1.load_strategy()
@@ -44,8 +48,6 @@ class World:
             self.current_player = 1
         else:
             self.current_player = 2
-
-        self.init_grid()
 
 
     def init_grid(self):
@@ -76,7 +78,6 @@ class World:
     def get_states(self):
         return self.states
 
-
     def update(self):
         """
         Update the state of the world
@@ -90,14 +91,14 @@ class World:
             return True
         elif self.state == WORLD_STATES.PLAYING:
             # Advance the game state
-            if self.current_player == 1 and self.bot1.update():
+            if self.current_player == 1 and self.bot1.act():
                 # It's robot 1's turn and the turn completed successfully
                 self.apply_rules(self.bot1, self.bot2)
                 self.bot1.update_strategy()
                 self.current_player = 2
                 self.key_event = None
                 return True
-            elif self.current_player == 2 and self.bot2.update():
+            elif self.current_player == 2 and self.bot2.act():
                 # It's robot 2's turn and the turn completed successfully
                 self.apply_rules(self.bot2, self.bot1)
                 self.bot2.update_strategy()

@@ -139,7 +139,7 @@ def compGamePlay(canvas):
     bot2 = world.bot2
     turns = 500
 
-    # this is only for computer versus computer games 
+    # this is only for computer versus computer games
     if bot1.botType == 'c' and bot2.botType == 'c':
         for turn in range(turns):
             if not world.isGameOver():
@@ -384,7 +384,7 @@ def loadRobotStrategies(canvas):
             Q = QLearning(world, bot1, bot2)
             canvas.data["Q"] = Q
 
-    # computer versus human   
+    # computer versus human
     elif bot1.botType == 'h' and bot2.botType == 'c':
         # bot 2 is value iteration
         if bot2.strategy == 'v':
