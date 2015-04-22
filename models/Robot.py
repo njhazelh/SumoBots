@@ -30,6 +30,8 @@ class Robot:
         self.world = world
         self.x = x
         self.y = y
+        self.x_intended = None
+        self.y_intended = None
         self.color = color
         self.fail_prob = 0.2
         self.last_action = None
@@ -167,7 +169,7 @@ class Robot:
             else:
                 weighted_actions.append((distribution_spread, legal_action))
         new_action = util.chooseFromDistribution(weighted_actions)
-        return new_action
+        return (action, new_action)
 
     def next_state(self, action, state=None):
         """
