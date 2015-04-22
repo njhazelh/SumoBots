@@ -27,6 +27,7 @@ class ArenaScene(Scene):
         self.height = 600
         self.turn_start = None
         self.resetting = False
+        self.delay_ms = 500
 
         self.world = World(self.config)
 
@@ -64,7 +65,7 @@ class ArenaScene(Scene):
             dt = turn_finish - self.turn_start
             self.turn_start = None
             dt_ms = int(dt.total_seconds() * 1000)
-            after_ms = max(0, 1000 - dt_ms)
+            after_ms = max(100, self.delay_ms - dt_ms)
             self.after(after_ms, self.game_loop)
         else:
             # update was not completed. Allow Tk mainloop to get events.
@@ -100,9 +101,12 @@ class ArenaScene(Scene):
         if event.keysym == "d":
             self.world.debug = not self.world.debug
         elif event.keysym == "r":
-            # Reset everything somehow.
             self.master.set_scene(SCENES.ARENA, config=self.config)
             return
+        elif event.keysym == 'minus':
+            self.delay_ms = max(0, self.delay_ms - 50)
+        elif event.keysym == 'equal':
+            self.delay_ms = max(0, self.delay_ms + 50)
         else:
             self.world.key_event = event
         self.world_view.render()
