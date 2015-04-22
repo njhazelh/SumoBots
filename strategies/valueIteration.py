@@ -40,6 +40,43 @@ def valueIteration(MDP, gamma, delta):
             keep_iterating = False
     return U
 
+def valueIterationActions(MDP, gamma, delta):
+    """
+    The value iteration algorithm calculates the utility of each state in the MDP. This
+    utility is then used to determine which action a robot should take, given it's current
+    state and possible actions from that state. Once the change in utility is less than
+    delta, the while loop terminates
+    """
+
+    # this will hold all utility information
+    U = util.Counter()
+    allActions = MDP.get_actions()
+    # when this term become true, the while loop terminates
+    keep_iterating = True
+    while keep_iterating:
+        maxDeltU = 0
+        # loop through each state on each iteration
+        for mdpState in MDP.states:
+            # will store the maximum utility out of all possible actions
+            maxVal = 0
+
+            for action in allActions[mdpState]:
+                # will sum the utilities over all possible states from that action
+                total = 0
+                for (nextState, prob) in MDP.transModel[(mdpState, action)].items():
+                    total += prob * (MDP.calc_rewards(mdpState, nextState) + gamma * U[nextState])
+                maxVal = max(maxVal, total)
+            Uprev = U[mdpState]
+
+            # update the utility for this state
+            U[mdpState] = maxVal
+
+            # if the utility value changes by less than delta, then stop iterating
+            deltU = abs(Uprev - U[mdpState])
+            maxDeltU = max(maxDeltU, deltU)
+        if maxDeltU < delta:
+            keep_iterating = False
+    return U
 
 def runValueIteration(world, robot1, robot2):
     """
@@ -61,7 +98,3 @@ def runValueIteration(world, robot1, robot2):
     U = valueIteration(mdp, world.gamma, world.delta)
 
     return U
-
-    # print out final utilities for the MDP
-    # for state in mdp.states:
-    # print 'U of ', state,' is ', U[state]

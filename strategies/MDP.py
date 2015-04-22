@@ -98,10 +98,17 @@ class MDP:
         for mdpState in self.states:
             dist = util.manhattanDistance(mdpState[1], mdpState[2])
             if dist == 0:
-                mdpRewards[mdpState] = 15
+                mdpRewards[mdpState] = 30
             else:
                 mdpRewards[mdpState] = 15 - dist
         return mdpRewards
+
+    def calc_rewards(self, oldState, newState):
+        """
+        This function takes in an old mdpState and a new mdpState and calculates the reward in transitioning
+        from oldState to newState
+        """
+        return
 
     def get_new_reward_model(self, world):
         """
