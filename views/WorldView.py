@@ -80,10 +80,11 @@ class WorldView:
         # For debugging: color background and draw cell values.
         if debug:
             # color the cells where the robots are intending to go
+            buff = 3
             if bot1.inteded_at(col,row):
-              canvas.create_rectangle(left, top, right, bottom, fill="yellow")
+              canvas.create_rectangle(left-buff, top-buff, right+buff, bottom+buff, fill="yellow")
             if bot2.inteded_at(col,row):
-              canvas.create_rectangle(left, top, right, bottom, fill="yellow")
+              canvas.create_rectangle(left-buff, top-buff, right+buff, bottom+buff, fill="yellow")
 
             if (grid[row][col] == -9):
                 # draw out-of-bounds
