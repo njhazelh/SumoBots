@@ -55,6 +55,7 @@ class Robot:
         :return: True if the update was completed, else False.
         """
         action = self.strategy.choose_action()
+        self.update_intended_state(action)
         if action is None or action not in self.get_legal_actions():
             return False
         else:
@@ -169,7 +170,7 @@ class Robot:
             else:
                 weighted_actions.append((distribution_spread, legal_action))
         new_action = util.chooseFromDistribution(weighted_actions)
-        return (action, new_action)
+        return new_action
 
     def next_state(self, action, state=None):
         """
@@ -193,6 +194,21 @@ class Robot:
             x += 1
 
         return x, y
+
+    def update_intended_state(self, action):
+
+        if action == ACTIONS.MOVE_NORTH:
+            self.y_intended = self.y - 1
+            self.x_intended = self.x
+        elif action == ACTIONS.MOVE_SOUTH:
+            self.y_intended = self.y + 1
+            self.x_intended = self.x
+        elif action == ACTIONS.MOVE_WEST:
+            self.y_intended = self.y 
+            self.x_intended = self.x - 1
+        elif action == ACTIONS.MOVE_EAST:
+            self.y_intended = self.y 
+            self.x_intended = self.x + 1
 
     @property
     def state(self):
@@ -233,3 +249,9 @@ class Robot:
         :return: True if the robot's row and column are x and y respectively.
         """
         return self.x == x and self.y == y
+
+    def inteded_at(self, x, y):
+        """
+        What the robot attempting to go to cell (x,y)?
+        """
+        return x == self.x_intended and y == self.y_intended
