@@ -71,7 +71,36 @@ class World:
                 dCenter = ((col - cx) ** 2 + (row - cy) ** 2) ** 0.5
                 if round(dCenter) > self.ring_radius:
                     self.sumo_grid[row][col] = -9
-                self.states.append((row, col))
+
+        # not initialize states (only arena cells and terminal states)
+        for row in range(self.rows):
+            for col in range(self.cols):
+                if self.sumo_grid[row][col] != -9 or self.is_boundary_cell(col,row):
+                    self.states.append((col,row))
+
+
+    def is_boundary_cell(self,x,y):
+        """
+        Checks if the given (x,y) cell is a boundary cell.
+        Meaning, it is a game over state, but only one cell
+        away from the arena
+        """
+
+        next_to_game_cell = False
+
+        if x+1 < self.cols:
+            if self.sumo_grid[x + 1][y] != -9:
+                next_to_game_cell = True
+        if x-1 >= 0:
+            if self.sumo_grid[x - 1][y] != -9:
+                next_to_game_cell = True
+        if y + 1 < self.rows:
+            if self.sumo_grid[x][y + 1] != -9:
+                next_to_game_cell = True
+        if y - 1 >= 0:
+            if self.sumo_grid[x][y - 1] != -9:
+                next_to_game_cell = True   
+        return next_to_game_cell
 
     def get_states(self):
         return self.states

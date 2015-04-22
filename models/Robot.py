@@ -82,32 +82,33 @@ class Robot:
         x, y = state
         grid = world.sumo_grid
 
-        # For now just return 1 space to the 'West', 'East', 'North', 'South'
-        # if grid[x + 1][y] != -9:
-        #     actions.append(ACTIONS.MOVE_EAST)
-        #
-        # if grid[x - 1][y] != -9:
-        #     actions.append(ACTIONS.MOVE_WEST)
-        #
-        # if grid[x][y - 1] != -9:
-        #     actions.append(ACTIONS.MOVE_NORTH)
-        #
-        # if grid[x][y + 1] != -9:
-        #     actions.append(ACTIONS.MOVE_SOUTH)
+        # Return actions for each direction that are in the arena, or are 
+        # terminal states
+        if grid[x + 1][y] != -9 or world.is_boundary_cell(x+1,y):
+            actions.append(ACTIONS.MOVE_EAST)
+        
+        if grid[x - 1][y] != -9 or world.is_boundary_cell(x-1,y):
+            actions.append(ACTIONS.MOVE_WEST)
+        
+        if grid[x][y - 1] != -9 or world.is_boundary_cell(x,y-1):
+            actions.append(ACTIONS.MOVE_NORTH)
+        
+        if grid[x][y + 1] != -9 or world.is_boundary_cell(x,y+1):
+            actions.append(ACTIONS.MOVE_SOUTH)
 
         # I think the robot should be able to kill itself.  It will take
         # longer to train, but it will show that we've taught
         # the robot not to kill itself.
         # Adding this change would also mean that we have to add all states
         # to the world in world.init_grid.
-        if x + 1 < world.cols:
-            actions.append(ACTIONS.MOVE_EAST)
-        if x - 1 >= 0:
-            actions.append(ACTIONS.MOVE_WEST)
-        if y + 1 < world.rows:
-            actions.append(ACTIONS.MOVE_SOUTH)
-        if y - 1 >= 0:
-            actions.append(ACTIONS.MOVE_NORTH)
+        # if x + 1 < world.cols:
+        #     actions.append(ACTIONS.MOVE_EAST)
+        # if x - 1 >= 0:
+        #     actions.append(ACTIONS.MOVE_WEST)
+        # if y + 1 < world.rows:
+        #     actions.append(ACTIONS.MOVE_SOUTH)
+        # if y - 1 >= 0:
+        #     actions.append(ACTIONS.MOVE_NORTH)
 
         return actions
 
