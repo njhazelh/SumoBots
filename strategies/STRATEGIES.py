@@ -26,3 +26,13 @@ def enum_to_strategy(robot, other_bot, world, type):
     else:
         raise Exception("Strategy not recognized: %s" % (type))
 
+
+def key_to_strategy(key):
+    if key == "h":
+        return HUMAN
+    elif key == "v":
+        return VALUE_ITERATION
+    elif key == "q":
+        return Q_LEARNING
+    else:
+        return None

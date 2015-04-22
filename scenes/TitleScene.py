@@ -18,7 +18,7 @@ class TitleScene(Scene):
 
     def on_enter(self, event):
         if event.keysym == "Return":
-            self.master.set_scene(SCENES.ROBOT_1)
+            self.master.next_scene()
 
     def render(self):
         self.canvas.create_text(self.width / 2,
