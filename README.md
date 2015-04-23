@@ -3,6 +3,13 @@ An final project for CS:4100/5100 Artificial Intelligence  and Capstone project.
 
 This project aims to create a world in which sumo bots can battle each other using various AI algorithms to intelligently choose actions.
 
+## Running the Program
+- To be able to train the robot run
+    > python sumo_trainer.py -c <gamesToTrain> q
+
+- To be able to run the sumoBots program
+    > python sumobots.py
+
 ##Rewards
 - Negative reward for each turn.
 - Huge reward for pushing opponent out of ring.
