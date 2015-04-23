@@ -29,7 +29,7 @@ class World:
         self.gamma = 0.3
         self.delta = 0.1
         self.alpha = 0.5
-        self.epsilon = 0.01
+        self.epsilon = 0.5
         self.winner = None
 
         self.init_grid()
