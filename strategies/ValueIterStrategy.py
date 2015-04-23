@@ -2,9 +2,6 @@ import shelve
 from strategies.Strategy import Strategy
 from strategies.valueIteration import runValueIteration
 
-__author__ = 'Nick'
-
-
 class ValueIterStrategy(Strategy):
     def __init__(self, me_bot, other_bot, world, from_store=True):
         self.me_bot = me_bot

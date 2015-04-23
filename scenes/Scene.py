@@ -1,7 +1,4 @@
-__author__ = 'Nick'
-
 from Tkinter import *
-
 
 class Scene(Frame):
     """

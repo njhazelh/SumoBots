@@ -1,10 +1,7 @@
 from scenes import SCENES
 from scenes.Scene import Scene
 
-__author__ = 'Nick'
-
 from Tkinter import *
-
 
 class TitleScene(Scene):
     def prepare(self, kwargs):

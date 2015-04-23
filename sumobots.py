@@ -7,9 +7,6 @@ from strategies.STRATEGIES import key_to_strategy
 from scenes.SumoApp import SumoApp
 
 
-__author__ = 'Nick'
-
-
 def runGUI(args):
     root = Tk()
     root.title("Robot-Sumo [by Team Wall-E]")

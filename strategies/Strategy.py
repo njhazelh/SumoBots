@@ -1,6 +1,3 @@
-__author__ = 'Nick'
-
-
 class Strategy(object):
     """
     Strategy encapsulates the decision making process that a robot makes

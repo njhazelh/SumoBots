@@ -1,8 +1,6 @@
 from strategies.Strategy import Strategy
 import ACTIONS
 
-__author__ = 'Nick'
-
 # Keys
 UP = "Up"
 DOWN = "Down"

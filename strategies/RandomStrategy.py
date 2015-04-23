@@ -2,8 +2,6 @@ import random
 import ACTIONS
 from Strategy import Strategy
 
-__author__ = 'Nick'
-
 class RandomStrategy(Strategy):
     def __init__(self, robot, world):
         self.robot = robot
