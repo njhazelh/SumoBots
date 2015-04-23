@@ -15,6 +15,7 @@ class MDP:
         self.states = self.get_states()
         self.actions = self.get_actions()
         self.transModel = self.get_trans_model()
+        #self.rewards = self.get_reward_model()
         self.rewards = self.get_new_reward_model(world)
 
     def get_states(self):
@@ -103,12 +104,28 @@ class MDP:
                 mdpRewards[mdpState] = 15 - dist
         return mdpRewards
 
-    def calc_rewards(self, oldState, newState):
+    def calc_rewards(self, oldState, newState, world):
         """
         This function takes in an old mdpState and a new mdpState and calculates the reward in transitioning
         from oldState to newState
         """
-        return
+        reward = 0
+        rows = world.rows
+        cols = world.cols
+        cx = (cols - 1) / 2.0
+        cy = (rows - 1) / 2.0
+        
+        dist = util.manhattanDistance(newState[1], newState[2])
+        reward += 15 - dist
+        
+        if is_rob1(oldState):
+            oldDistFromCenter = util.manhattanDistance(oldState[1], (cx, cy))
+            newDistFromCenter = util.manhattanDistance(newState[2], (cx, cy))
+        else:
+            oldDistFromCenter = util.manhattanDistance(oldState[1], (cx, cy))
+            newDistFromCenter = util.manhattanDistance(newState[2], (cx, cy))
+        
+        return mdpRewards
 
     def get_new_reward_model(self, world):
         """
@@ -135,17 +152,22 @@ class MDP:
             rob2DCenter = ((rob2ColPos - cx) ** 2 + (rob2RowPos - cy) ** 2) ** 0.5
 
             if self.is_rob1(mdpState):
-                # Check to see whether the robot is on the edge of the boundary
-                if round(rob1DCenter) == world.ring_radius and round(rob2DCenter) <= world.ring_radius:
-                    mdpRewards[mdpState] -= 10
-                    # If robot is on boundary and next to the opponent
-                    if dist == 1:
-                        mdpRewards[mdpState] -= 10
+                # Positive reward for not being on the boundary and the enemy being on the boundary
+                if rob1DCenter < world.ring_radius and rob2DCenter >= world.ring_radius:
+                    mdpRewards[mdpState] += 5
+                # Negative reward for being on the boundary
+                elif rob1DCenter >= world.ring_radius:
+                    mdpRewards[mdpState] -= 5
+                elif round(rob1DCenter) == world.ring_radius and round(rob2DCenter) > world.ring_radius:
+                    mdpRewards[mdpState] += 15
+            # Same thing but for bot 2
             else:
-                if round(rob2DCenter) == world.ring_radius and round(rob1DCenter) <= world.ring_radius:
-                    mdpRewards[mdpState] -= 10
-                    if dist == 1:
-                        mdpRewards[mdpState] -= 10
+                if rob2DCenter < world.ring_radius and rob1DCenter >= world.ring_radius:
+                    mdpRewards[mdpState] += 5
+                elif rob2DCenter >= world.ring_radius:
+                    mdpRewards[mdpState] -= 5
+                elif round(rob2DCenter) == world.ring_radius and round(rob1DCenter) > world.ring_radius:
+                    mdpRewards[mdpState] += 15
 
         return mdpRewards
 
