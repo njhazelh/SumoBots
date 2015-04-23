@@ -1,9 +1,13 @@
 #!/usr/bin/python
 
 import argparse
+import sys
+from ValueIterStrategy import ValueIterStrategy
+
 from strategies.STRATEGIES import key_to_strategy
 from strategies import STRATEGIES
-from models.World import  World
+from models.World import World
+
 
 def train_value_iteration():
     world = World({1: STRATEGIES.VALUE_ITERATION, 2: STRATEGIES.VALUE_ITERATION}, False)
@@ -24,28 +28,32 @@ def train_value_iteration():
             return
     print "Read/Write to store was performed correctly for value iteration."
 
-def train_q_learning(cycles):
+
+def train_q_learning(games):
+    print "Starting Q-learning training for %d games" % (games)
+
     world = World({1: STRATEGIES.Q_LEARNING, 2: STRATEGIES.VALUE_ITERATION}, False)
     world.epsilon = 0.5
     world.reset_game()
-    #print "Before: %s" % (world.bot1.strategy.Q.values)
 
     player1_wins = 0
     player2_wins = 0
 
-    while (player1_wins+player2_wins) < cycles:
-	if world.game_over:
-	    if(world.winner==1):
-	        player1_wins += 1
-	    else:
-	        player2_wins += 1
-	    world.reset_game()
-	world.update()
-	world.update()
+    while (player1_wins + player2_wins) < games:
+        sys.stdout.write("\r%f%%" % ((player1_wins + player2_wins) / float(games) * 100))
+        if world.game_over:
+            if (world.winner == 1):
+                player1_wins += 1
+            else:
+                player2_wins += 1
+            world.reset_game()
+        world.update()
+        world.update()
+    print ""  # Clears the line
 
-    print "Player 1 won %s out of %s [%f]" % (player1_wins, (player2_wins+player1_wins), float(float(player1_wins)/(player2_wins+player1_wins) * 100))
+    total_games = player1_wins + player2_wins
+    print "Player 1 won %s out of %s [%f]" % (player1_wins, total_games, float(player1_wins) / total_games * 100.0)
 
-    #print "After: %s" % (world.bot1.strategy.Q.values)
     old = world.bot1.strategy.Q.values
     world.bot1.strategy.save_to_store()
 
@@ -63,6 +71,7 @@ def train_q_learning(cycles):
             print "Difference between read/write"
             return
     print "Read/Write to store was performed correctly for q-learning."
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="SumoBot Arena")
