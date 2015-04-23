@@ -5,8 +5,6 @@ from strategies.STRATEGIES import key_to_strategy
 from strategies import STRATEGIES
 from models.World import  World
 
-__author__ = 'Nick'
-
 def train_value_iteration():
     world = World({1: STRATEGIES.VALUE_ITERATION, 2: STRATEGIES.VALUE_ITERATION}, False)
 
@@ -30,15 +28,24 @@ def train_q_learning(cycles):
     world = World({1: STRATEGIES.Q_LEARNING, 2: STRATEGIES.VALUE_ITERATION}, False)
     world.epsilon = 0.5
     world.reset_game()
-    print "Before: %s" % (world.bot1.strategy.Q.values)
+    #print "Before: %s" % (world.bot1.strategy.Q.values)
 
-    for i in xrange(cycles):
-        if world.game_over:
-            world.reset_game()
-        world.update()
-        world.update()
+    player1_wins = 0
+    player2_wins = 0
 
-    print "After: %s" % (world.bot1.strategy.Q.values)
+    while (player1_wins+player2_wins) < cycles:
+	if world.game_over:
+	    if(world.winner==1):
+	        player1_wins += 1
+	    else:
+	        player2_wins += 1
+	    world.reset_game()
+	world.update()
+	world.update()
+
+    print "Player 1 won %s out of %s [%f]" % (player1_wins, (player2_wins+player1_wins), float(float(player1_wins)/(player2_wins+player1_wins) * 100))
+
+    #print "After: %s" % (world.bot1.strategy.Q.values)
     old = world.bot1.strategy.Q.values
     world.bot1.strategy.save_to_store()
 
