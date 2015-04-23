@@ -24,7 +24,12 @@ class WorldView:
         c.create_oval(120, 120, 480, 480, width=5, fill="#333", outline="")
 
         self.draw_grid(c)
-
+        
+	c.create_text(self.width - 80, self.height - 100,
+                      text="[r] = restart\n[m] = main menu",
+                      fill="#eee",
+                      font=("Helvetica", 10))
+        
         c.create_rectangle(0, self.height - 60,
                            self.width, self.height,
                            fill="#333")
