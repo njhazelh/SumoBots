@@ -3,9 +3,6 @@ from models.Robot import Robot
 import WORLD_STATES
 from strategies import STRATEGIES
 
-__author__ = 'Nick'
-
-
 class World:
     """
     World is the world in which SumoBots fight.  It is configured as a 2D grid with a

@@ -1,10 +1,5 @@
 from Tkconstants import ALL
-
 from models import WORLD_STATES
-
-
-__author__ = 'Nick'
-
 
 class WorldView:
     def __init__(self, world, canvas, width, height):
@@ -35,15 +30,18 @@ class WorldView:
                       fill="#222",
                       font=("Helvetica", 18, "bold"))
 
+        player_text = "Player " + str(self.world.current_player) + " ("
+	
         if self.world.current_player == 1:
-            c.create_text(150, self.height - 30,
-                          text="Player 1",
-                          fill=self.world.bot1.color,
-                          font=("Helvetica", 18, "normal"))
+            bot = self.world.bot1
         elif self.world.current_player == 2:
-            c.create_text(150, self.height - 30,
-                          text="Player 2",
-                          fill=self.world.bot2.color,
+            bot = self.world.bot2
+
+	
+	player_text = player_text + bot.getTypeName() + ")"
+        c.create_text(110 + len(player_text)*4, self.height - 30,
+                          text=player_text,
+                          fill=bot.color,
                           font=("Helvetica", 18, "normal"))
 
         if self.world.state == WORLD_STATES.GAME_OVER:

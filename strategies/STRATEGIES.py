@@ -2,8 +2,6 @@ from strategies.HumanStrategy import HumanStrategy
 from strategies.QLearnStrategy import QLearnStrategy
 from strategies.ValueIterStrategy import ValueIterStrategy
 
-__author__ = 'Nick'
-
 HUMAN = 0
 Q_LEARNING = 1
 VALUE_ITERATION = 2

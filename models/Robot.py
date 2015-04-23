@@ -2,8 +2,6 @@ from strategies import ACTIONS
 from strategies import STRATEGIES
 from strategies import util
 
-__author__ = 'Nick'
-
 class Robot:
     """
     A Robot is a single agent within the SumoBot world. It moves according
@@ -44,6 +42,17 @@ class Robot:
         """
         self.enemy = enemy
 
+    def getTypeName(self):
+	botTypeName = "UNKNOWN"
+
+        if self.type == STRATEGIES.HUMAN:
+            botTypeName = "Human"
+        elif self.type == STRATEGIES.Q_LEARNING:
+            botTypeName = "Q-Learning"
+        elif self.type == STRATEGIES.VALUE_ITERATION:
+            botTypeName = "Value_Iteration"
+  
+	return botTypeName
     def load_strategy(self, from_store):
         """
         Load the strategy that this robot is configured to use.

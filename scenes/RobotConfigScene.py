@@ -4,10 +4,6 @@ from scenes import SCENES
 from scenes.Scene import Scene
 from strategies import STRATEGIES
 
-
-__author__ = 'Nick'
-
-
 class RobotConfigScene(Scene):
     def prepare(self, kwargs):
         self.width = 600
@@ -28,8 +24,8 @@ class RobotConfigScene(Scene):
 
     def render(self):
         self.canvas.create_text(self.width / 2, 240,
-                                text="Press key to choose robot %d strategy." % (self.robot),
-                                font=("Helvetica", 12, "bold"))
+                                text="Robot %d: Press key to select strategy." % (self.robot),
+                                font=("Helvetica", 14, "bold"))
         self.canvas.create_text(self.width / 2, 300,
                                 text="h: Human Control")
         self.canvas.create_text(self.width / 2, 340,

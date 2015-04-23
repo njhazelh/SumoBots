@@ -2,11 +2,7 @@ from scenes import SCENES
 from scenes.ArenaScene import ArenaScene
 from scenes.RobotConfigScene import RobotConfigScene
 from scenes.TitleScene import TitleScene
-
-__author__ = 'Nick'
-
 from Tkinter import *
-
 
 class SumoApp(Frame):
     def __init__(self, master, robot1, robot2):

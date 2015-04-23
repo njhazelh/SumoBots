@@ -6,10 +6,6 @@ from Scene import Scene
 from models.World import World
 from views.WorldView import WorldView
 
-
-__author__ = 'Nick'
-
-
 class ArenaScene(Scene):
     """
     ArenaScene is the Scene in which the robots actually fight.
