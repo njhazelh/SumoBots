@@ -14,11 +14,9 @@ class SumoApp(Frame):
             1: robot1,
             2: robot2
         }
-        self.set_scene(SCENES.TITLE)
+        self.next_scene()
 
     def next_scene(self, **kwargs):
-
-
         if self.scene is None:
             self.set_scene(SCENES.TITLE, **kwargs)
         elif self.config[1] is None:
@@ -37,8 +35,6 @@ class SumoApp(Frame):
             self.config = kwargs.get("config", self.config)
 
         if scene == SCENES.TITLE:
-	    self.config[1] = None
-            self.config[2] = None
             self.scene = TitleScene(self)
         elif scene == SCENES.ROBOT_1 and self.config[1] is None:
             self.scene = RobotConfigScene(self, robot=1, config=self.config)
