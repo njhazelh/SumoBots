@@ -19,7 +19,7 @@ class RobotConfigScene(Scene):
         else:
             self.config = kwargs['config']
 
-        self.canvas = Canvas(self.master, bg="white", width=self.width, height=self.height)
+        self.canvas = Canvas(self.master, bg="#555", width=self.width, height=self.height)
         self.canvas.pack()
         self.render()
 
@@ -29,13 +29,20 @@ class RobotConfigScene(Scene):
     def render(self):
         self.canvas.create_text(self.width / 2, 240,
                                 text="Press key to choose robot %d strategy." % (self.robot),
-                                font=("Helvetica", 12, "bold"))
+                                fill="#afa",
+                                font=("Helvetica", 16, "bold"))
         self.canvas.create_text(self.width / 2, 300,
-                                text="h: Human Control")
+                                text="h: Human Control",
+                                fill="#aaa",
+                                font=("Helvetica", 14, "normal"))
         self.canvas.create_text(self.width / 2, 340,
-                                text="v: Value Iteration")
+                                text="v: Value Iteration",
+                                fill="#aaa",
+                                font=("Helvetica", 14, "normal"))
         self.canvas.create_text(self.width / 2, 380,
-                                text="q: Q-Learning")
+                                text="q: Q-Learning",
+                                fill="#aaa",
+                                font=("Helvetica", 14, "normal"))
 
     def on_key(self, key):
         if key.keysym not in ["q", "h", "v"]:

@@ -19,7 +19,7 @@ class WorldView:
 
         c.create_rectangle(0, 0,
                            self.width, self.height,
-                           fill="#ccc")
+                           fill="#c22")
 
         c.create_text(self.width / 2, self.height / 8,
                       text="SumoBot Arena",
@@ -30,9 +30,13 @@ class WorldView:
 
         self.draw_grid(c)
 
+        c.create_rectangle(0, self.height - 60,
+                           self.width, self.height,
+                           fill="#eee")
+
         c.create_text(50, self.height - 30,
                       text="Turn:",
-                      fill="#222",
+                      fill="#333",
                       font=("Helvetica", 18, "bold"))
 
         if self.world.current_player == 1:
@@ -48,15 +52,21 @@ class WorldView:
 
         if self.world.state == WORLD_STATES.GAME_OVER:
             c.create_text(self.width / 2,
-                          self.height / 2,
+                          self.height / 2 - 40,
                           text="Game Over!",
                           font=("Helvetica", 32, "bold"))
+            winner = self.world.bot1 if self.world.winner == 1 else self.world.bot2
+            c.create_text(self.width / 2,
+                          self.height / 2 + 40,
+                          text="Player %d wins" % (winner.id),
+                          fill=winner.color,
+                          font=("Helvetica", 18, "bold"))
         elif self.world.state == WORLD_STATES.COUNT_DOWN:
             text = self.world.count if self.world.count != 0 else "FIGHT!"
             c.create_text(self.width / 2,
                           self.height / 2,
                           text=text,
-                          fill="red",
+                          fill="#c22",
                           font=("Helvetica", 32, "bold"))
         c.update()
 
@@ -88,7 +98,7 @@ class WorldView:
 
             if (grid[row][col] == -9):
                 # draw out-of-bounds
-                canvas.create_rectangle(left, top, right, bottom, fill="red")
+                canvas.create_rectangle(left, top, right, bottom, fill="#c22")
             else:
                 # draw in-bounds
                 canvas.create_rectangle(left, top, right, bottom)
