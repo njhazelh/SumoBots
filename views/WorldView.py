@@ -14,51 +14,50 @@ class WorldView:
 
         c.create_rectangle(0, 0,
                            self.width, self.height,
-                           fill="#c22")
+                           fill="#555")
 
         c.create_text(self.width / 2, self.height / 8,
                       text="SumoBot Arena",
-                      tag="title", fill="#222",
+                      tag="title", fill="#eee",
                       font=("Helvetica", 18, "bold"))
 
-        c.create_oval(120, 120, 480, 480, width=5, fill="#eee")
+        c.create_oval(120, 120, 480, 480, width=5, fill="#333", outline="")
 
         self.draw_grid(c)
 
         c.create_rectangle(0, self.height - 60,
                            self.width, self.height,
-                           fill="#eee")
+                           fill="#333")
 
         c.create_text(50, self.height - 30,
                       text="Turn:",
-                      fill="#333",
-                      font=("Helvetica", 18, "bold"))
+                      fill="#aaa",
+                      font=("Helvetica", 14, "bold"))
 
-        player_text = "Player " + str(self.world.current_player) + " ("
-	
         if self.world.current_player == 1:
             bot = self.world.bot1
-        elif self.world.current_player == 2:
+        else:
             bot = self.world.bot2
 
-	
-	player_text = player_text + bot.getTypeName() + ")"
-        c.create_text(110 + len(player_text)*4, self.height - 30,
+        player_text = "Player %d (%s)" % (self.world.current_player, bot.get_type_name())
+        c.create_text(100, self.height - 30,
+                          anchor="w",
                           text=player_text,
                           fill=bot.color,
-                          font=("Helvetica", 18, "normal"))
+                          font=("Helvetica", 14, "normal"))
 
         if self.world.state == WORLD_STATES.GAME_OVER:
             c.create_text(self.width / 2,
                           self.height / 2 - 40,
                           text="Game Over!",
+                          fill="#eee",
                           font=("Helvetica", 32, "bold"))
             winner = self.world.bot1 if self.world.winner == 1 else self.world.bot2
             c.create_text(self.width / 2,
-                          self.height / 2 + 40,
+                          self.height / 2 + 30,
                           text="Player %d wins" % (winner.id),
                           fill=winner.color,
-                          font=("Helvetica", 18, "bold"))
+                          font=("Helvetica", 16, "bold"))
         elif self.world.state == WORLD_STATES.COUNT_DOWN:
             text = self.world.count if self.world.count != 0 else "FIGHT!"
             c.create_text(self.width / 2,

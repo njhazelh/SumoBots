@@ -35,9 +35,9 @@ class World:
         self.init_grid()
 
         self.bot1 = Robot(x=self.cols / 2 - 3, y=self.rows / 2,
-                          id=1, world=self, color="#a00", type=config[1])
+                          id=1, world=self, color="#d33", type=config[1])
         self.bot2 = Robot(x=self.cols / 2 + 3, y=self.rows / 2,
-                          id=2, world=self, color="#0a0", type=config[2])
+                          id=2, world=self, color="#3d3", type=config[2])
         self.bot1.set_enemy(self.bot2)
         self.bot2.set_enemy(self.bot1)
         self.bot1.load_strategy(from_store)
