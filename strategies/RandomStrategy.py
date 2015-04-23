@@ -17,14 +17,15 @@ class RandomStrategy(Strategy):
 
         if grid[x + 1][y] != -9:
             actions.append(ACTIONS.MOVE_EAST)
-        elif grid[x - 1][y] != -9:
+        if grid[x - 1][y] != -9:
             actions.append(ACTIONS.MOVE_WEST)
-        elif grid[x][y - 1] != -9:
+        if grid[x][y - 1] != -9:
             actions.append(ACTIONS.MOVE_NORTH)
-        elif grid[x][y + 1] != -9:
+        if grid[x][y + 1] != -9:
             actions.append(ACTIONS.MOVE_SOUTH)
 
-        return random.choice(actions)
+        choice = random.choice(actions)
+        return choice
 
     def __str__(self):
         return "Random"
