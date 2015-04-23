@@ -2,7 +2,6 @@
 
 import argparse
 import sys
-from ValueIterStrategy import ValueIterStrategy
 
 from strategies.STRATEGIES import key_to_strategy
 from strategies import STRATEGIES

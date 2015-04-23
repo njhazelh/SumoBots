@@ -1,6 +1,6 @@
 import shelve
 from strategies.Strategy import Strategy
-from valueIteration import runValueIteration
+from strategies.valueIteration import runValueIteration
 
 __author__ = 'Nick'
 
