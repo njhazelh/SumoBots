@@ -70,7 +70,7 @@ class QLearning:
             elif self.getQValue(nextQstate) == bestValue:
                 bestAction = random.choice([action, bestAction])
 
-        return bestValue
+        return bestAction
 
     def computeValueFromQValues(self, qState, world, robot):
         """
