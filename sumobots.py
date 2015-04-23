@@ -2,7 +2,7 @@
 
 import argparse
 from Tkinter import Tk
-from STRATEGIES import key_to_strategy
+from strategies.STRATEGIES import key_to_strategy
 from scenes.SumoApp import SumoApp
 
 
