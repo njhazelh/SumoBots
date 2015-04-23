@@ -33,25 +33,22 @@ class RobotConfigScene(Scene):
                                 fill="#aaa",
                                 font=("Helvetica", 14, "normal"))
         self.canvas.create_text(self.width / 2, 340,
-                                text="v: Value Iteration",
+                                text="r: Random",
                                 fill="#aaa",
                                 font=("Helvetica", 14, "normal"))
         self.canvas.create_text(self.width / 2, 380,
+                                text="v: Value Iteration",
+                                fill="#aaa",
+                                font=("Helvetica", 14, "normal"))
+        self.canvas.create_text(self.width / 2, 420,
                                 text="q: Q-Learning",
                                 fill="#aaa",
                                 font=("Helvetica", 14, "normal"))
 
     def on_key(self, key):
-        if key.keysym not in ["q", "h", "v"]:
+        if key.keysym not in ["q", "h", "r", "v"]:
             return
-
-        if key.keysym == "q":
-            self.config[self.robot] = STRATEGIES.Q_LEARNING
-        elif key.keysym == "h":
-            self.config[self.robot] = STRATEGIES.HUMAN
-        elif key.keysym == "v":
-            self.config[self.robot] = STRATEGIES.VALUE_ITERATION
-
+        self.config[self.robot] = STRATEGIES.key_to_strategy(key.keysym)
         self.master.next_scene(config=self.config)
 
     def cleanup(self):

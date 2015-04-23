@@ -51,6 +51,8 @@ class Robot:
             botTypeName = "Q-Learning"
         elif self.type == STRATEGIES.VALUE_ITERATION:
             botTypeName = "Value Iteration"
+        elif self.type == STRATEGIES.RANDOM:
+            botTypeName = "Random"
 
         return botTypeName
 
