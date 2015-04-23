@@ -35,7 +35,7 @@ class ValueIterStrategy(Strategy):
                     max_util = next_util
                     best_action = action
             elif self.me_bot.id == 2:
-                next_util = self.U[(1, enemy_state, next_state)]
+                next_util = self.U[(1, next_state, enemy_state)]
                 if max_util is None or next_util > max_util:
                     max_util = next_util
                     best_action = action
