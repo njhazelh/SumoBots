@@ -14,7 +14,7 @@ class QLearnStrategy(Strategy):
         self.load_strategy(from_store)
 
     def load_strategy(self, from_store):
-        if from_store: self.load()
+        if from_store: self.load_from_store()
 
     def choose_action(self):
         return self.Q.getAction(self.world, self.robot)

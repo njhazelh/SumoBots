@@ -26,6 +26,7 @@ def train_value_iteration():
 
 def train_q_learning(cycles):
     world = World({1: STRATEGIES.Q_LEARNING, 2: STRATEGIES.VALUE_ITERATION}, False)
+    world.epsilon = 0.5
     world.reset_game()
     print "Before: %s" % (world.bot1.strategy.Q.values)
 
@@ -56,7 +57,7 @@ def train_q_learning(cycles):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="SumoBot Arena")
-    parser.add_argument("-c", "--cycles", type=int, default=1000, help="The number of training cycles to run.")
+    parser.add_argument("-c", "--cycles", type=int, default=10000, help="The number of training cycles to run.")
     parser.add_argument("trainee", help="The strategy to train.", choices=["v", "q"])
     args = parser.parse_args()
     args.trainee = key_to_strategy(args.trainee)
