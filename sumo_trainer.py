@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import argparse
 from strategies.STRATEGIES import key_to_strategy
 from strategies import STRATEGIES
