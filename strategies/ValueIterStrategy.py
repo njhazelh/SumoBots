@@ -14,7 +14,10 @@ class ValueIterStrategy(Strategy):
 
     def load_strategy(self, from_store):
         if not from_store or not self.load_from_store():
-            self.U = runValueIteration(self.world, self.me_bot, self.other_bot)
+            if self.me_bot == self.world.bot1:
+                self.U = runValueIteration(self.world, self.me_bot, self.other_bot)
+            elif self.me_bot == self.world.bot2:
+                self.U = runValueIteration(self.world, self.other_bot, self.me_bot)
             self.save_to_store()
 
     def choose_action(self):
@@ -32,7 +35,7 @@ class ValueIterStrategy(Strategy):
                     max_util = next_util
                     best_action = action
             elif self.me_bot.id == 2:
-                next_util = self.U[(1, next_state, enemy_state)]
+                next_util = self.U[(1, enemy_state, next_state)]
                 if max_util is None or next_util > max_util:
                     max_util = next_util
                     best_action = action
