@@ -114,18 +114,18 @@ class MDP:
         cols = world.cols
         cx = (cols - 1) / 2.0
         cy = (rows - 1) / 2.0
-        
+
         dist = util.manhattanDistance(newState[1], newState[2])
         reward += 15 - dist
-        
-        if is_rob1(oldState):
+
+        if self.is_rob1(oldState):
             oldDistFromCenter = util.manhattanDistance(oldState[1], (cx, cy))
             newDistFromCenter = util.manhattanDistance(newState[2], (cx, cy))
         else:
             oldDistFromCenter = util.manhattanDistance(oldState[1], (cx, cy))
             newDistFromCenter = util.manhattanDistance(newState[2], (cx, cy))
-        
-        return mdpRewards
+
+        return mdpRewards # TODO What should this be?  Currently it's an error.
 
     def get_new_reward_model(self, world):
         """

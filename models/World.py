@@ -30,6 +30,7 @@ class World:
         self.delta = 0.1
         self.alpha = 0.5
         self.epsilon = 0.01
+        self.winner = None
 
         self.init_grid()
 
@@ -57,6 +58,7 @@ class World:
         self.state = WORLD_STATES.PLAYING
         self.game_over = False
         self.key_event = None
+        self.winner = None
 
     def init_grid(self):
         """
@@ -160,10 +162,12 @@ class World:
         if self.sumo_grid[other_bot.x][other_bot.y] == -9:
             self.game_over = True
             self.state = WORLD_STATES.GAME_OVER
+            self.winner = moved_bot.id
 
         if self.sumo_grid[moved_bot.x][moved_bot.y] == -9:
             self.game_over = True
             self.state = WORLD_STATES.GAME_OVER
+            self.winner = other_bot.id
 
     def on_key(self, event):
         """

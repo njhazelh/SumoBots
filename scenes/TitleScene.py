@@ -10,7 +10,7 @@ class TitleScene(Scene):
     def prepare(self, kwargs):
         self.width = 600
         self.height = 600
-        self.canvas = Canvas(self.master, bg="white", width=self.width, height=self.height)
+        self.canvas = Canvas(self.master, bg="#555", width=self.width, height=self.height)
         self.canvas.pack()
         self.canvas.focus_set()
         self.canvas.bind("<Key>", self.on_enter)
@@ -24,12 +24,13 @@ class TitleScene(Scene):
         self.canvas.create_text(self.width / 2,
                                 self.height / 2 - 50,
                                 text="SumoBots!",
-                                font=("Helvetica", 32, "bold"),
-                                fill="red")
+                                font=("Helvetica", 40, "bold"),
+                                fill="#afa")
         self.canvas.create_text(self.width / 2,
-                                self.height / 2 + 50,
+                                self.height / 2 + 30,
+                                fill="#ccc",
                                 text="Click <Enter> to begin",
-                                font=("Helvetica", 12, "normal"))
+                                font=("Helvetica", 14, "normal"))
 
     def cleanup(self):
         self.canvas.destroy()

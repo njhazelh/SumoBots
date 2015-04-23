@@ -5,6 +5,7 @@ import SCENES
 from Scene import Scene
 from models.World import World
 from views.WorldView import WorldView
+from models import WORLD_STATES
 
 class ArenaScene(Scene):
     """
@@ -61,7 +62,11 @@ class ArenaScene(Scene):
             dt = turn_finish - self.turn_start
             self.turn_start = None
             dt_ms = int(dt.total_seconds() * 1000)
-            after_ms = max(100, self.delay_ms - dt_ms)
+            if self.world.state == WORLD_STATES.COUNT_DOWN:
+                delay = 1000
+            else:
+                delay = self.delay_ms
+            after_ms = max(100, delay - dt_ms)
             self.after(after_ms, self.game_loop)
         else:
             # update was not completed. Allow Tk mainloop to get events.
