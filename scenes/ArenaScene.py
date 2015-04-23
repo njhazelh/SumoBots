@@ -101,6 +101,9 @@ class ArenaScene(Scene):
         """
         if event.keysym == "d":
             self.world.debug = not self.world.debug
+        elif event.keysym == "m":
+            self.master.set_scene(SCENES.TITLE,config=None)
+            return
         elif event.keysym == "r":
             self.master.set_scene(SCENES.ARENA, config=self.config)
             return

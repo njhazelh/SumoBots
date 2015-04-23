@@ -37,6 +37,8 @@ class SumoApp(Frame):
             self.config = kwargs.get("config", self.config)
 
         if scene == SCENES.TITLE:
+	    self.config[1] = None
+            self.config[2] = None
             self.scene = TitleScene(self)
         elif scene == SCENES.ROBOT_1 and self.config[1] is None:
             self.scene = RobotConfigScene(self, robot=1, config=self.config)
