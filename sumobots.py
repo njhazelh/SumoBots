@@ -2,6 +2,7 @@
 
 import argparse
 from Tkinter import Tk
+
 from strategies.STRATEGIES import key_to_strategy
 from scenes.SumoApp import SumoApp
 
@@ -15,6 +16,7 @@ def runGUI(args):
     root.resizable(width=0, height=0)
     app = SumoApp(root, args.robot1, args.robot2)
     app.mainloop()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="SumoBot Arena")
