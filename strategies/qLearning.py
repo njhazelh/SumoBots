@@ -142,8 +142,8 @@ class QLearning:
         reward = self.mdp.rewards[qState]
 
         oldQVal = self.getQValue(qState)
-        # maxVal = self.computeValueFromQValues(qState, world, robot)
-        newValue = (1 - alpha) * oldQVal + alpha * (reward + gamma * oldQVal)
+        maxVal = self.computeValueFromQValues(qState, world, robot)
+        newValue = (1 - alpha) * oldQVal + alpha * (reward + gamma * maxVal)
 
         self.values[qState] = newValue
 
