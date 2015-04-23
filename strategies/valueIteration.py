@@ -1,3 +1,4 @@
+from collections import defaultdict
 from MDP import MDP
 import util
 
@@ -11,7 +12,7 @@ def valueIteration(MDP, gamma, delta):
     """
 
     # this will hold all utility information
-    U = util.Counter()
+    U = defaultdict(float)
     allActions = MDP.get_actions()
     # when this term become true, the while loop terminates
     keep_iterating = True

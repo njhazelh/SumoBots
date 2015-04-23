@@ -81,9 +81,9 @@ class WorldView:
         if debug:
             # color the cells where the robots are intending to go
             buff = 3
-            if bot1.inteded_at(col,row) and self.world.current_player == 2:
+            if bot1.intended_at(col,row) and self.world.current_player == 2:
               canvas.create_rectangle(left-buff, top-buff, right+buff, bottom+buff, fill="yellow")
-            if bot2.inteded_at(col,row) and self.world.current_player == 1:
+            if bot2.intended_at(col,row) and self.world.current_player == 1:
               canvas.create_rectangle(left-buff, top-buff, right+buff, bottom+buff, fill="yellow")
 
             if (grid[row][col] == -9):

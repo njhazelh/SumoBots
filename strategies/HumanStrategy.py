@@ -9,7 +9,6 @@ DOWN = "Down"
 LEFT = "Left"
 RIGHT = "Right"
 
-
 def key_to_action(event):
     """
     Find which action maps to the key event.

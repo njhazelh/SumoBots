@@ -1,3 +1,4 @@
+import shelve
 from strategies.Strategy import Strategy
 from valueIteration import runValueIteration
 
@@ -5,14 +6,16 @@ __author__ = 'Nick'
 
 
 class ValueIterStrategy(Strategy):
-    def __init__(self, me_bot, other_bot, world):
+    def __init__(self, me_bot, other_bot, world, from_store=True):
         self.me_bot = me_bot
         self.other_bot = other_bot
         self.world = world
-        self.load_strategy()
+        self.load_strategy(from_store)
 
-    def load_strategy(self):
-        self.U = runValueIteration(self.world, self.me_bot, self.other_bot)
+    def load_strategy(self, from_store):
+        if not from_store or not self.load_from_store():
+            self.U = runValueIteration(self.world, self.me_bot, self.other_bot)
+            self.save_to_store()
 
     def choose_action(self):
         enemy_state = self.other_bot.state
@@ -35,3 +38,24 @@ class ValueIterStrategy(Strategy):
                     best_action = action
 
         return best_action
+
+
+    def load_from_store(self):
+        world_id = "%d:%d:%d" % (self.world.cols, self.world.rows, self.world.ring_radius)
+        store = shelve.open("value_iteration_store")
+        if store.has_key(world_id):
+            self.U = store[world_id]
+            store.close()
+            return True
+        else:
+            store.close()
+            return False
+
+    def save_to_store(self):
+        world_id = "%d:%d:%d" % (self.world.cols, self.world.rows, self.world.ring_radius)
+        store = shelve.open("value_iteration_store")
+        store[world_id] = self.U
+        store.close()
+
+    def __str__(self):
+        return str(self.U)

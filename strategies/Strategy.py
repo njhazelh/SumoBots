@@ -19,3 +19,12 @@ class Strategy(object):
         Update the strategy after a move.  Intended for learning algorithms.
         """
         pass
+
+    def save_to_store(self):
+        pass
+
+    def load_from_store(self):
+        pass
+
+    def __str__(self):
+        raise NotImplementedError()
