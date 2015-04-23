@@ -12,7 +12,7 @@ class World:
     ring inside the grid.  Robots want to say inside the ring, and push others out.
     """
 
-    def __init__(self, config):
+    def __init__(self, config, from_store=True):
         """
         Init the World state
         :param config: The configuration settings of the world.
@@ -32,7 +32,7 @@ class World:
         self.gamma = 0.3
         self.delta = 0.1
         self.alpha = 0.5
-        self.epsilon = 0.5
+        self.epsilon = 0.01
 
         self.init_grid()
 
@@ -42,14 +42,24 @@ class World:
                           id=2, world=self, color="#0a0", type=config[2])
         self.bot1.set_enemy(self.bot2)
         self.bot2.set_enemy(self.bot1)
-        self.bot1.load_strategy()
-        self.bot2.load_strategy()
+        self.bot1.load_strategy(from_store)
+        self.bot2.load_strategy(from_store)
 
         if config[1] == STRATEGIES.HUMAN or config[2] != STRATEGIES.HUMAN:
             self.current_player = 1
         else:
             self.current_player = 2
 
+    def reset_game(self):
+        """
+        A quick reset of the important parts of the game.
+        Used to train many games in a row.
+        """
+        self.bot1.reset(self.cols / 2 - 3, self.rows / 2)
+        self.bot2.reset(self.cols / 2 + 3, self.rows / 2)
+        self.state = WORLD_STATES.PLAYING
+        self.game_over = False
+        self.key_event = None
 
     def init_grid(self):
         """
@@ -99,7 +109,7 @@ class World:
                 next_to_game_cell = True
         if y - 1 >= 0:
             if self.sumo_grid[x][y - 1] != -9:
-                next_to_game_cell = True   
+                next_to_game_cell = True
         return next_to_game_cell
 
     def get_states(self):

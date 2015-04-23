@@ -1,3 +1,4 @@
+from collections import defaultdict
 import random
 
 from MDP import MDP
@@ -24,7 +25,7 @@ class QLearning:
     """
 
     def __init__(self, world, robot1, robot2):
-        self.values = util.Counter()
+        self.values = defaultdict(float)
         self.mdp = MDP(world, robot1, robot2)
 
     def getQValue(self, state):
@@ -145,3 +146,6 @@ class QLearning:
         newValue = (1 - alpha) * oldQVal + alpha * (reward + gamma * oldQVal)
 
         self.values[qState] = newValue
+
+    def __str__(self):
+        return str(self.values)

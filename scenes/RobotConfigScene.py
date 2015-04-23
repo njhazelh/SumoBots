@@ -41,11 +41,6 @@ class RobotConfigScene(Scene):
         if key.keysym not in ["q", "h", "v"]:
             return
 
-        if self.robot == 1:
-            next_scene = SCENES.ROBOT_2
-        else:
-            next_scene = SCENES.ARENA
-
         if key.keysym == "q":
             self.config[self.robot] = STRATEGIES.Q_LEARNING
         elif key.keysym == "h":
@@ -53,7 +48,7 @@ class RobotConfigScene(Scene):
         elif key.keysym == "v":
             self.config[self.robot] = STRATEGIES.VALUE_ITERATION
 
-        self.master.set_scene(next_scene, config=self.config)
+        self.master.next_scene(config=self.config)
 
     def cleanup(self):
         self.canvas.destroy()

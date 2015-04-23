@@ -4,12 +4,6 @@ from strategies import util
 
 __author__ = 'Nick'
 
-NORTH = 0
-SOUTH = 1
-WEST = 2
-EAST = 3
-
-
 class Robot:
     """
     A Robot is a single agent within the SumoBot world. It moves according
@@ -36,6 +30,13 @@ class Robot:
         self.fail_prob = 0.2
         self.last_action = None
 
+    def reset(self, x, y):
+        self.x_intended = None
+        self.y_intended = None
+        self.last_action = None
+        self.x = x
+        self.y = y
+
     def set_enemy(self, enemy):
         """
         Set the robot this robot is trying to push out of the ring.
@@ -43,11 +44,11 @@ class Robot:
         """
         self.enemy = enemy
 
-    def load_strategy(self):
+    def load_strategy(self, from_store):
         """
         Load the strategy that this robot is configured to use.
         """
-        self.strategy = STRATEGIES.enum_to_strategy(self, self.enemy, self.world, self.type)
+        self.strategy = STRATEGIES.enum_to_strategy(self, self.enemy, self.world, self.type, from_store)
 
     def act(self):
         """
@@ -82,33 +83,19 @@ class Robot:
         x, y = state
         grid = world.sumo_grid
 
-        # Return actions for each direction that are in the arena, or are 
+        # Return actions for each direction that are in the arena, or are
         # terminal states
         if grid[x + 1][y] != -9 or world.is_boundary_cell(x+1,y):
             actions.append(ACTIONS.MOVE_EAST)
-        
+
         if grid[x - 1][y] != -9 or world.is_boundary_cell(x-1,y):
             actions.append(ACTIONS.MOVE_WEST)
-        
+
         if grid[x][y - 1] != -9 or world.is_boundary_cell(x,y-1):
             actions.append(ACTIONS.MOVE_NORTH)
-        
+
         if grid[x][y + 1] != -9 or world.is_boundary_cell(x,y+1):
             actions.append(ACTIONS.MOVE_SOUTH)
-
-        # I think the robot should be able to kill itself.  It will take
-        # longer to train, but it will show that we've taught
-        # the robot not to kill itself.
-        # Adding this change would also mean that we have to add all states
-        # to the world in world.init_grid.
-        # if x + 1 < world.cols:
-        #     actions.append(ACTIONS.MOVE_EAST)
-        # if x - 1 >= 0:
-        #     actions.append(ACTIONS.MOVE_WEST)
-        # if y + 1 < world.rows:
-        #     actions.append(ACTIONS.MOVE_SOUTH)
-        # if y - 1 >= 0:
-        #     actions.append(ACTIONS.MOVE_NORTH)
 
         return actions
 
@@ -205,10 +192,10 @@ class Robot:
             self.y_intended = self.y + 1
             self.x_intended = self.x
         elif action == ACTIONS.MOVE_WEST:
-            self.y_intended = self.y 
+            self.y_intended = self.y
             self.x_intended = self.x - 1
         elif action == ACTIONS.MOVE_EAST:
-            self.y_intended = self.y 
+            self.y_intended = self.y
             self.x_intended = self.x + 1
 
     @property
@@ -251,7 +238,7 @@ class Robot:
         """
         return self.x == x and self.y == y
 
-    def inteded_at(self, x, y):
+    def intended_at(self, x, y):
         """
         What the robot attempting to go to cell (x,y)?
         """
