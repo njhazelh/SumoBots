@@ -31,6 +31,7 @@ class World:
         self.alpha = 0.5
         self.epsilon = 0.5
         self.winner = None
+        self.training = False
 
         self.init_grid()
 

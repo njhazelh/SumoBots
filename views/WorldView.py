@@ -94,9 +94,9 @@ class WorldView:
             # color the cells where the robots are intending to go
             buff = 3
             if bot1.intended_at(col,row) and self.world.current_player == 2:
-              canvas.create_rectangle(left-buff, top-buff, right+buff, bottom+buff, fill="yellow")
+              canvas.create_rectangle(left-buff, top-buff, right+buff, bottom+buff, fill="red")
             if bot2.intended_at(col,row) and self.world.current_player == 1:
-              canvas.create_rectangle(left-buff, top-buff, right+buff, bottom+buff, fill="yellow")
+              canvas.create_rectangle(left-buff, top-buff, right+buff, bottom+buff, fill="green")
 
             if (grid[row][col] == -9):
                 # draw out-of-bounds

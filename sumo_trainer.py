@@ -35,6 +35,9 @@ def train_q_learning(games):
     world.epsilon = 0.5
     world.reset_game()
 
+    # tell world that we are in training mode
+    world.training = True
+    
     player1_wins = 0
     player2_wins = 0
 
