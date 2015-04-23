@@ -26,7 +26,7 @@ class QLearnStrategy(Strategy):
         world_id = "%d:%d:%d" % (self.world.cols, self.world.rows, self.world.ring_radius)
         store = shelve.open("q_learn_store")
         if store.has_key(world_id):
- 	    print "Q-Learning Store Loaded!"
+            print "Q-Learning Store Loaded!"
             self.Q.values = store[world_id]
         store.close()
 
